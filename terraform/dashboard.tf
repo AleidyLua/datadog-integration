@@ -1,228 +1,230 @@
-# Datadog Monitor for Elastic Beanstalk CPU
-resource "datadog_monitor" "foo" {
-  name    = "High CPU Usage on Elastic Beanstalk"
-  type    = "query alert"
-  message = <<EOT
-High CPU usage detected in the Elastic Beanstalk environment `{{environment.name}}`.
-Please investigate!
-EOT
-
-  query = <<QUERY
-avg(last_1h):avg:aws.elasticbeanstalk.cpu{environment:${var.beanstalk_environment}} by {host} > 4
-  QUERY
-
-  notify_no_data    = false
-  renotify_interval = 30
-  tags              = ["elasticbeanstalk", "cpu", "alert"]
-}
-
-#Logs
-resource "datadog_logs_metric" "testing_logs_metric" {
-  name = "testing.logs.metric"
-  compute {
-    aggregation_type = "distribution"
-    path             = "@duration"
-  }
-  filter {
-    query = "service:test"
-  }
-  group_by {
-    path     = "@status"
-    tag_name = "status"
-  }
-  group_by {
-    path     = "@version"
-    tag_name = "version"
-  }
-}
-
-
-resource "datadog_monitor" "beanstalk_environment_health" {
-  name    = "Elastic Beanstalk Environment Health Alert"
-  type    = "query alert"
-  query   = "avg(last_5m):max:aws.elasticbeanstalk.environment.health{environment:${var.beanstalk_environment}} > 2"
-  message = "Environment `${var.beanstalk_environment}` has an unhealthy status. Check deployment status and recent logs."
-  tags    = ["alert", "elasticbeanstalk", "health"]
-}
-
-resource "datadog_dashboard" "beanstalk_dashboard" {
-  title       = "Elastic Beanstalk Monitoring Dashboard"
-  layout_type = "ordered"
-
-  widget {
-    timeseries_definition {
-      title = "CPU Utilization"
-      request {
-        q = "avg:aws.ec2.cpuutilization{elasticbeanstalk:${var.beanstalk_environment}}"
-      }
-    }
-  }
-
-  widget {
-    timeseries_definition {
-      title = "Request Latency"
-      request {
-        q = "avg:aws.elasticbeanstalk.application.request.latency.count{environment:${var.beanstalk_environment}}"
-      }
-    }
-  }
-
-  widget {
-    timeseries_definition {
-      title = "Error Count"
-      request {
-        q = "sum:aws.elasticbeanstalk.application.request.error.count{environment:${var.beanstalk_environment}}"
-      }
-    }
-  }
-}
-
-
-
-
-
-
-
-
-resource "datadog_dashboard" "use_dashboard" {
-  title       = "USE Metrics Dashboard"
-  layout_type = "ordered"
-
-  widget {
-    timeseries_definition {
-      title = "CPU Utilization"
-      request {
-        q = "avg:aws.ec2.cpuutilization{*}"
-      }
-    }
-  }
-
-  widget {
-    timeseries_definition {
-      title = "Memory Usage"
-      request {
-        q = "avg:aws.ec2.memory.used_percent{*}"
-      }
-    }
-  }
-
-  widget {
-    timeseries_definition {
-      title = "Disk Space"
-      request {
-        q = "avg:aws.ec2.disk.free_percent{*}"
-      }
-    }
-  }
-}
-
-resource "datadog_dashboard" "red_dashboard" {
-  title       = "RED Metrics Dashboard"
-  layout_type = "ordered"
-
-  widget {
-    timeseries_definition {
-      title = "Request Count"
-      request {
-        q = "sum:aws.elasticbeanstalk.application.request.count{*}"
-      }
-    }
-  }
-
-  widget {
-    timeseries_definition {
-      title = "Error Rate"
-      request {
-        q = "avg:aws.elasticbeanstalk.application.request.error.count{*}"
-      }
-    }
-  }
-
-  widget {
-    timeseries_definition {
-      title = "Request Latency"
-      request {
-        q = "avg:aws.elasticbeanstalk.application.request.latency{*}"
-      }
-    }
-  }
-}
-
-resource "datadog_dashboard" "rum_dashboard" {
-  title       = "RUM Metrics Dashboard"
-  layout_type = "ordered"
-
-  widget {
-    timeseries_definition {
-      title = "Frontend Page Load Time"
-      request {
-        q = "avg:rum.browser.page_load{*}"
-      }
-    }
-  }
-
-  widget {
-    timeseries_definition {
-      title = "User Actions per Minute"
-      request {
-        q = "sum:rum.browser.user_action{*}"
-      }
-    }
-  }
-
-  widget {
-    timeseries_definition {
-      title = "Frontend Error Rate"
-      request {
-        q = "avg:rum.browser.error_rate{*}"
-      }
-    }
-  }
-}
-
+//resource "datadog_dashboard" "default_metrics_dashboard" {
+//  title       = "Default Metrics Dashboard"
+//  layout_type = "ordered"
+//
+//  widget {
+//    timeseries_definition {
+//      request {
+//        q            = "avg:aws.ec2.cpuutilization{elasticbeanstalk_environment-name:${var.beanstalk_environment}}"
+//        display_type = "line"
+//      }
+//      title = "CPU Utilization"
+//      yaxis {
+//        scale = "linear"
+//      }
+//    }
+//  }
+//
+//  widget {
+//    timeseries_definition {
+//      request {
+//        q            = "avg:aws.ec2.memoryutilization{elasticbeanstalk_environment-name:${var.beanstalk_environment}}"
+//        display_type = "line"
+//      }
+//      title = "Memory Utilization"
+//      yaxis {
+//        scale = "linear"
+//      }
+//    }
+//  }
+//
+//  widget {
+//    timeseries_definition {
+//      request {
+//        q            = "avg:aws.ec2.networkin{elasticbeanstalk_environment-name:${var.beanstalk_environment}}"
+//        display_type = "line"
+//      }
+//      title = "Network In"
+//      yaxis {
+//        scale = "linear"
+//      }
+//    }
+//  }
+//
+//  widget {
+//    timeseries_definition {
+//      request {
+//        q            = "avg:aws.ec2.networkout{elasticbeanstalk_environment-name:${var.beanstalk_environment}}"
+//        display_type = "line"
+//      }
+//      title = "Network Out"
+//      yaxis {
+//        scale = "linear"
+//      }
+//    }
+//  }
+//
+//  widget {
+//    timeseries_definition {
+//      request {
+//        q            = "avg:aws.applicationelb.target_response_time.maximum{elasticbeanstalk_environment-name:${var.beanstalk_environment}}"
+//        display_type = "line"
+//      }
+//      title = "Page Load Time"
+//    }
+//  }
+//}
+//
 //resource "datadog_dashboard" "custom_metrics_dashboard" {
 //  title       = "Custom Metrics Dashboard"
 //  layout_type = "ordered"
 //
 //  widget {
 //    timeseries_definition {
-//      title = "Third-party API Call Duration"
 //      request {
-//        q = "avg:ticketonline.api.third_party_call.duration{*}"
+//        q            = "avg:third_party_api_call_duration{elasticbeanstalk_environment-name:${var.beanstalk_environment}}"
+//        display_type = "line"
+//      }
+//      title = "Custom Metric: Example"
+//      yaxis {
+//        scale = "linear"
 //      }
 //    }
 //  }
 //
 //  widget {
 //    timeseries_definition {
-//      title = "Third-party API Call Errors"
 //      request {
-//        q = "sum:ticketonline.api.third_party_call.errors{*}"
+//        q            = "avg:custom.application_error_count{elasticbeanstalk_environment-name:${var.beanstalk_environment}}"
+//        display_type = "line"
+//      }
+//      title = "Custom Metric: Application Errors"
+//      yaxis {
+//        scale = "linear"
+//      }
+//    }
+//  }
+//
+//  widget {
+//    timeseries_definition {
+//      request {
+//        q            = "avg:custom.queue_length{elasticbeanstalk_environment-name:${var.beanstalk_environment}}"
+//        display_type = "line"
+//      }
+//      title = "Custom Metric: Queue Length"
+//      yaxis {
+//        scale = "linear"
 //      }
 //    }
 //  }
 //}
-
-#monitors
-
-resource "datadog_monitor" "cpu_high" {
-  name    = "High CPU Utilization"
-  type    = "query alert"
-  query   = "avg(last_5m):avg:aws.ec2.cpuutilization{*} > 80"
-  message = "CPU usage is above 80%. Investigate resource usage."
-}
-
-resource "datadog_monitor" "high_latency" {
-  name    = "High Request Latency"
-  type    = "query alert"
-  query   = "avg(last_5m):avg:aws.elasticbeanstalk.application.request.latency{*} > 300"
-  message = "Request latency is above 300ms."
-}
-
-//resource "datadog_monitor" "third_party_api_errors" {
-//  name    = "High Third-party API Error Rate"
-//  type    = "query alert"
-//  query   = "sum(last_5m):sum:ticketonline.api.third_party_call.errors{*} > 10"
-//  message = "Third-party API errors exceeded threshold."
+//
+//resource "datadog_monitor" "high_cpu_alert" {
+//  name     = "High CPU Utilization Alert"
+//  type     = "metric alert"
+//  query    = "avg(last_5m):avg:aws.ec2.cpuutilization{elasticbeanstalk_environment-name:${var.beanstalk_environment}} > 80"
+//  message  = <<EOT
+//High CPU utilization detected in Elastic Beanstalk environment: ${var.beanstalk_environment}.
+//
+//Notify: @aleidy@iliosllc.com
+//See more details in Datadog: https://app.datadoghq.com/monitors
+//EOT
+//  escalation_message = "Escalation: High CPU utilization exceeded 80%. Immediate action required."
+//
+//  tags = ["env:${var.beanstalk_environment}"]
+//
+//  notify_no_data   = true
+//  no_data_timeframe = 10
+//
+//  renotify_interval = 60  # Renotify after 60 minutes if the issue persists
+//
+//  notify_audit = true
+//  timeout_h    = 0  # No timeout for alerts
 //}
-
+//
+//
+//resource "datadog_monitor" "high_memory_alert" {
+//  name     = "High Memory Utilization Alert"
+//  type     = "metric alert"
+//  query    = "avg(last_5m):avg:aws.ec2.memoryutilization{elasticbeanstalk_environment-name:${var.beanstalk_environment}} > 85"
+//  message  = <<EOT
+//High memory utilization detected in Elastic Beanstalk environment: ${var.beanstalk_environment}.
+//
+//Notify: @aleidy@iliosllc.com
+//See more details in Datadog: https://app.datadoghq.com/monitors
+//EOT
+//  escalation_message = "Escalation: High memory utilization exceeded 85%. Immediate action required."
+//
+//  tags = ["env:${var.beanstalk_environment}"]
+//
+//  notify_no_data   = true
+//  no_data_timeframe = 10
+//
+//  renotify_interval = 60  # Renotify after 60 minutes if the issue persists
+//
+//  notify_audit = true
+//  timeout_h    = 0  # No timeout for alerts
+//}
+//
+//resource "datadog_monitor" "ec2_status_check_alert" {
+//  name     = "EC2 Status Check Failure"
+//  type     = "metric alert"
+//  query    = "avg(last_5m):avg:aws.ec2.statuscheckfailed{elasticbeanstalk_environment-name:${var.beanstalk_environment}} > 0"
+//  message  = <<EOT
+//EC2 status check failure detected in Elastic Beanstalk environment: ${var.beanstalk_environment}.
+//
+//Notify: @aleidy@iliosllc.com
+//See more details in Datadog: https://app.datadoghq.com/monitors
+//EOT
+//  escalation_message = "Escalation: EC2 instance status check failed."
+//
+//  tags = ["env:${var.beanstalk_environment}"]
+//
+//  notify_no_data   = true
+//  no_data_timeframe = 10
+//
+//  renotify_interval = 60  # Renotify after 60 minutes if the issue persists
+//
+//  notify_audit = true
+//  timeout_h    = 0  # No timeout for alerts
+//}
+//
+//resource "datadog_monitor" "custom_api_call_alert" {
+//  name     = "High API Call Duration Alert"
+//  type     = "metric alert"
+//  query    = "avg(last_5m):avg:third_party_api_call_duration{elasticbeanstalk_environment-name:${var.beanstalk_environment}} > 50"
+//  message  = <<EOT
+//Custom metric: API call duration exceeded threshold in Elastic Beanstalk environment: ${var.beanstalk_environment}.
+//
+//Notify: @aleidy@iliosllc.com
+//See more details in Datadog: https://app.datadoghq.com/monitors
+//EOT
+//  escalation_message = "Escalation: API call duration exceeded 50ms."
+//
+//  tags = ["env:${var.beanstalk_environment}"]
+//
+//  notify_no_data   = true
+//  no_data_timeframe = 10
+//
+//  renotify_interval = 60  # Renotify after 60 minutes if the issue persists
+//
+//  notify_audit = true
+//  timeout_h    = 0  # No timeout for alerts
+//}
+//
+//resource "datadog_monitor" "custom_app_error_alert" {
+//  name     = "High Application Error Alert"
+//  type     = "metric alert"
+//  query    = "avg(last_5m):avg:custom.application_error_count{elasticbeanstalk_environment-name:${var.beanstalk_environment}} > 100"
+//  message  = <<EOT
+//Custom metric: Application errors exceeded threshold in Elastic Beanstalk environment: ${var.beanstalk_environment}.
+//
+//Notify: @aleidy@iliosllc.com
+//See more details in Datadog: https://app.datadoghq.com/monitors
+//EOT
+//  escalation_message = "Escalation: Application error count exceeded 100."
+//
+//  tags = ["env:${var.beanstalk_environment}"]
+//
+//  notify_no_data   = true
+//  no_data_timeframe = 10
+//
+//  renotify_interval = 60  # Renotify after 60 minutes if the issue persists
+//
+//  notify_audit = true
+//  timeout_h    = 0  # No timeout for alerts
+//}
+//
+//
+//
+//
