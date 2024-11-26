@@ -6,5 +6,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="1732214097569-TicketsProject" />
+    <orderEntry type="module" module-name="tf-aws-client-stack" />
+    <orderEntry type="module" module-name="huma.ai" />
   </component>
 </module>
