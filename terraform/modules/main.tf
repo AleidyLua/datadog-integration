@@ -38,7 +38,7 @@ resource "datadog_monitor" "app_alerts" {
 
   name     = "App Alert for ${each.value}"
   type     = "metric alert"
-  query    = "avg(last_5m):avg:${each.value}{elasticbeanstalk_environment-name:${var.environment}} > 80"
+  query    = "avg(last_1h):avg:${each.value}{elasticbeanstalk_environment-name:${var.environment}} > 80"
   monitor_thresholds {
     critical = 80
   }
