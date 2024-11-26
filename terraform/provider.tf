@@ -1,10 +1,16 @@
 terraform {
- required_providers {
-   datadog = {
-     source = "DataDog/datadog"
-   }
- }
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+    datadog = {
+      source  = "datadog/datadog"
+      version = "~> 3.48.0"
+    }
+  }
 }
+
 
 provider "aws" {
   region = "us-east-2"
@@ -15,5 +21,3 @@ provider "datadog" {
  app_key = "896ad8a510cba847d0986d4aef1ae47c610d3be8"
  api_url = "https://api.datadoghq.com"
 }
-
-

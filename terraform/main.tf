@@ -1,4 +1,3 @@
-//
 //data "aws_iam_policy_document" "datadog_aws_integration_assume_role" {
 //   statement {
 //   actions = ["sts:AssumeRole"]
@@ -151,27 +150,21 @@
 //   account_id  = "721481723200"
 //   role_name   = "DatadogAWSIntegrationRole"
 //}
-//
-////resource "aws_iam_instance_profile" "test_profile" {
-////  name = "test_profile"
-////  role = aws_iam_role.role.name
-////}
-////
-////data "aws_iam_policy_document" "assume_role" {
-////  statement {
-////    effect = "Allow"
-////
-////    principals {
-////      type        = "Service"
-////      identifiers = ["ec2.amazonaws.com"]
-////    }
-////
-////    actions = ["sts:AssumeRole"]
-////  }
-////}
-////
-////resource "aws_iam_role" "role" {
-////  name               = "test_role"
-////  path               = "/"
-////  assume_role_policy = data.aws_iam_policy_document.assume_role.json
-////}
+
+module "app1" {
+  source = "./modules"
+  providers = {
+    datadog = datadog
+  }
+  application = "ebs-app"
+  environment = "ebs-app"
+}
+
+module "app2" {
+  source = "./modules"
+  providers = {
+    datadog = datadog
+  }
+  application = "app2"
+  environment = "app2env"
+}
