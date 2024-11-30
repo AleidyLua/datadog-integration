@@ -4,6 +4,7 @@
 *.tfstate.backup
 .terraform/
 ../.idea/vcs.xml
+.terraform.lock.hcl
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
