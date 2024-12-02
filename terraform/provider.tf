@@ -9,6 +9,8 @@ terraform {
       version = "~> 3.48.0"
     }
   }
+
+  //TODO add required version, at least 1.9.0
 }
 
 provider "aws" {

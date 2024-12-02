@@ -1,12 +1,12 @@
 variable "region" {
-  type = string
+  type    = string
   default = "us-east-2"
 }
 
 variable "metrics_rds" {
   description = "List of metrics for RDS"
-  type = set(string)
-  default = [
+  type        = set(string)
+  default     = [
     "aws.rds.cpuutilization",
     "aws.rds.freeable_memory",
     "aws.rds.free_storage_space",
@@ -18,8 +18,8 @@ variable "metrics_rds" {
 
 variable "metrics_elasticache" {
   description = "List of metrics for RDS"
-  type = set(string)
-  default = [
+  type        = set(string)
+  default     = [
     "aws.elasticache.cpuutilization",
     "aws.elasticache.freeable_memory",
     "aws.elasticache.swapusage",
@@ -36,8 +36,8 @@ variable "metrics_elasticache" {
 
 variable "metrics_lambda" {
   description = "List of metrics for RDS"
-  type = set(string)
-  default = [
+  type        = set(string)
+  default     = [
     "aws.lambda.errors",
     "aws.lambda.throttles",
     "aws.lambda.duration",
@@ -48,14 +48,14 @@ variable "metrics_lambda" {
 }
 
 variable "application_elasticbean" {
-  type = set(string)
+  type    = set(string)
   default = ["eb-app"]
 }
 
 variable "metrics_elasticbean" {
   description = "List of metrics for Elastic Beanstalk"
-  type = set(string)
-  default = [
+  type        = set(string)
+  default     = [
     "aws.ec2.cpuutilization",
     "aws.ec2.memoryutilization",
     "aws.ec2.networkin",
@@ -67,8 +67,8 @@ variable "metrics_elasticbean" {
 
 variable "metrics_loadbalancer" {
   description = "List of metrics for metrics loadbalancer"
-  type = set(string)
-  default = [
+  type        = set(string)
+  default     = [
     "aws.applicationelb.target_response_time.maximum",
     "aws.applicationelb.http_5xx_count",
     "aws.applicationelb.target_connection_error_count",
