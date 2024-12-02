@@ -122,7 +122,6 @@ data "aws_iam_policy_document" "datadog_aws_integration" {
       "xray:BatchGetTraces",
       "xray:GetTraceSummaries"
     ]
-
     resources = ["*"]
   }
 }

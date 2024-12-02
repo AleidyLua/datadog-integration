@@ -18,9 +18,9 @@ provider "aws" {
 }
 
 provider "datadog" {
- api_key = data.aws_ssm_parameter.datadog_api_key.value
- app_key = data.aws_ssm_parameter.datadog_app_key.value
- api_url = "https://api.datadoghq.com"
+  api_key = data.aws_ssm_parameter.datadog_api_key.value
+  app_key = data.aws_ssm_parameter.datadog_app_key.value
+  api_url = "https://api.datadoghq.com"
 }
 
 data "aws_ssm_parameter" "datadog_api_key" {
