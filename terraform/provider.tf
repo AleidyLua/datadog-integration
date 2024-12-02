@@ -9,6 +9,8 @@ terraform {
       version = "~> 3.48.0"
     }
   }
+
+  //TODO add required version, at least 1.9.0
 }
 
 provider "aws" {
@@ -16,9 +18,9 @@ provider "aws" {
 }
 
 provider "datadog" {
- api_key = data.aws_ssm_parameter.datadog_api_key.value
- app_key = data.aws_ssm_parameter.datadog_app_key.value
- api_url = "https://api.datadoghq.com"
+  api_key = data.aws_ssm_parameter.datadog_api_key.value
+  app_key = data.aws_ssm_parameter.datadog_app_key.value
+  api_url = "https://api.datadoghq.com"
 }
 
 data "aws_ssm_parameter" "datadog_api_key" {

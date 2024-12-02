@@ -1,156 +1,157 @@
 data "aws_iam_policy_document" "datadog_aws_integration_assume_role" {
-   statement {
-   actions = ["sts:AssumeRole"]
+  statement {
+    actions = ["sts:AssumeRole"]
 
-   principals {
-      type = "AWS"
+    principals {
+      type        = "AWS"
       identifiers = ["arn:aws:iam::464622532012:root"]
-   }
-   condition {
-      test = "StringEquals"
+    }
+    condition {
+      test     = "StringEquals"
       variable = "sts:ExternalId"
 
       values = [
-         datadog_integration_aws.datadog.external_id
+        datadog_integration_aws.datadog.external_id
       ]
-   }
-   }
+    }
+  }
 }
 
 data "aws_iam_policy_document" "datadog_aws_integration" {
-   statement {
-   actions = ["apigateway:GET",
-                "autoscaling:Describe*",
-                "backup:List*",
-                "backup:ListRecoveryPointsByBackupVault",
-                "bcm-data-exports:GetExport",
-                "bcm-data-exports:ListExports",
-                "budgets:ViewBudget",
-                "cassandra:Select",
-                "cloudfront:GetDistributionConfig",
-                "cloudfront:ListDistributions",
-                "cloudtrail:DescribeTrails",
-                "cloudtrail:GetTrailStatus",
-                "cloudtrail:LookupEvents",
-                "cloudwatch:Describe*",
-                "cloudwatch:Get*",
-                "cloudwatch:List*",
-                "codedeploy:BatchGet*",
-                "codedeploy:List*",
-                "cur:DescribeReportDefinitions",
-                "directconnect:Describe*",
-                "dynamodb:Describe*",
-                "dynamodb:List*",
-                "ec2:Describe*",
-                "ec2:GetSnapshotBlockPublicAccessState",
-                "ec2:GetTransitGatewayPrefixListReferences",
-                "ec2:SearchTransitGatewayRoutes",
-                "ecs:Describe*",
-                "ecs:List*",
-                "elasticache:Describe*",
-                "elasticache:List*",
-                "elasticfilesystem:DescribeAccessPoints",
-                "elasticfilesystem:DescribeFileSystems",
-                "elasticfilesystem:DescribeTags",
-                "elasticloadbalancing:Describe*",
-                "elasticmapreduce:Describe*",
-                "elasticmapreduce:List*",
-                "es:DescribeElasticsearchDomains",
-                "es:ListDomainNames",
-                "es:ListTags",
-                "events:CreateEventBus",
-                "fsx:DescribeFileSystems",
-                "fsx:ListTagsForResource",
-                "glacier:GetVaultNotifications",
-                "glue:ListRegistries",
-                "health:DescribeAffectedEntities",
-                "health:DescribeEventDetails",
-                "health:DescribeEvents",
-                "kinesis:Describe*",
-                "kinesis:List*",
-                "lambda:GetPolicy",
-                "lambda:List*",
-                "lightsail:GetInstancePortStates",
-                "logs:DeleteSubscriptionFilter",
-                "logs:DescribeLogGroups",
-                "logs:DescribeLogStreams",
-                "logs:DescribeSubscriptionFilters",
-                "logs:FilterLogEvents",
-                "logs:PutSubscriptionFilter",
-                "logs:TestMetricFilter",
-                "oam:ListAttachedLinks",
-                "oam:ListSinks",
-                "organizations:Describe*",
-                "organizations:List*",
-                "rds:Describe*",
-                "rds:List*",
-                "redshift:DescribeClusters",
-                "redshift:DescribeLoggingStatus",
-                "route53:List*",
-                "s3:GetBucketLocation",
-                "s3:GetBucketLogging",
-                "s3:GetBucketNotification",
-                "s3:GetBucketTagging",
-                "s3:ListAccessGrants",
-                "s3:ListAllMyBuckets",
-                "s3:PutBucketNotification",
-                "savingsplans:DescribeSavingsPlanRates",
-                "savingsplans:DescribeSavingsPlans",
-                "ses:Get*",
-                "sns:GetSubscriptionAttributes",
-                "sns:List*",
-                "sns:Publish",
-                "sqs:ListQueues",
-                "states:DescribeStateMachine",
-                "states:ListStateMachines",
-                "support:DescribeTrustedAdvisor*",
-                "support:RefreshTrustedAdvisorCheck",
-                "tag:GetResources",
-                "tag:GetTagKeys",
-                "tag:GetTagValues",
-                "timestream:DescribeEndpoints",
-                "waf-regional:ListRuleGroups",
-                "waf-regional:ListRules",
-                "waf:ListRuleGroups",
-                "waf:ListRules",
-                "wafv2:GetIPSet",
-                "wafv2:GetLoggingConfiguration",
-                "wafv2:GetRegexPatternSet",
-                "wafv2:GetRuleGroup",
-                "wafv2:ListLoggingConfigurations",
-                "xray:BatchGetTraces",
-                "xray:GetTraceSummaries"]
-
-   resources = ["*"]
-   }
+  statement {
+    actions = [
+      "apigateway:GET",
+      "autoscaling:Describe*",
+      "backup:List*",
+      "backup:ListRecoveryPointsByBackupVault",
+      "bcm-data-exports:GetExport",
+      "bcm-data-exports:ListExports",
+      "budgets:ViewBudget",
+      "cassandra:Select",
+      "cloudfront:GetDistributionConfig",
+      "cloudfront:ListDistributions",
+      "cloudtrail:DescribeTrails",
+      "cloudtrail:GetTrailStatus",
+      "cloudtrail:LookupEvents",
+      "cloudwatch:Describe*",
+      "cloudwatch:Get*",
+      "cloudwatch:List*",
+      "codedeploy:BatchGet*",
+      "codedeploy:List*",
+      "cur:DescribeReportDefinitions",
+      "directconnect:Describe*",
+      "dynamodb:Describe*",
+      "dynamodb:List*",
+      "ec2:Describe*",
+      "ec2:GetSnapshotBlockPublicAccessState",
+      "ec2:GetTransitGatewayPrefixListReferences",
+      "ec2:SearchTransitGatewayRoutes",
+      "ecs:Describe*",
+      "ecs:List*",
+      "elasticache:Describe*",
+      "elasticache:List*",
+      "elasticfilesystem:DescribeAccessPoints",
+      "elasticfilesystem:DescribeFileSystems",
+      "elasticfilesystem:DescribeTags",
+      "elasticloadbalancing:Describe*",
+      "elasticmapreduce:Describe*",
+      "elasticmapreduce:List*",
+      "es:DescribeElasticsearchDomains",
+      "es:ListDomainNames",
+      "es:ListTags",
+      "events:CreateEventBus",
+      "fsx:DescribeFileSystems",
+      "fsx:ListTagsForResource",
+      "glacier:GetVaultNotifications",
+      "glue:ListRegistries",
+      "health:DescribeAffectedEntities",
+      "health:DescribeEventDetails",
+      "health:DescribeEvents",
+      "kinesis:Describe*",
+      "kinesis:List*",
+      "lambda:GetPolicy",
+      "lambda:List*",
+      "lightsail:GetInstancePortStates",
+      "logs:DeleteSubscriptionFilter",
+      "logs:DescribeLogGroups",
+      "logs:DescribeLogStreams",
+      "logs:DescribeSubscriptionFilters",
+      "logs:FilterLogEvents",
+      "logs:PutSubscriptionFilter",
+      "logs:TestMetricFilter",
+      "oam:ListAttachedLinks",
+      "oam:ListSinks",
+      "organizations:Describe*",
+      "organizations:List*",
+      "rds:Describe*",
+      "rds:List*",
+      "redshift:DescribeClusters",
+      "redshift:DescribeLoggingStatus",
+      "route53:List*",
+      "s3:GetBucketLocation",
+      "s3:GetBucketLogging",
+      "s3:GetBucketNotification",
+      "s3:GetBucketTagging",
+      "s3:ListAccessGrants",
+      "s3:ListAllMyBuckets",
+      "s3:PutBucketNotification",
+      "savingsplans:DescribeSavingsPlanRates",
+      "savingsplans:DescribeSavingsPlans",
+      "ses:Get*",
+      "sns:GetSubscriptionAttributes",
+      "sns:List*",
+      "sns:Publish",
+      "sqs:ListQueues",
+      "states:DescribeStateMachine",
+      "states:ListStateMachines",
+      "support:DescribeTrustedAdvisor*",
+      "support:RefreshTrustedAdvisorCheck",
+      "tag:GetResources",
+      "tag:GetTagKeys",
+      "tag:GetTagValues",
+      "timestream:DescribeEndpoints",
+      "waf-regional:ListRuleGroups",
+      "waf-regional:ListRules",
+      "waf:ListRuleGroups",
+      "waf:ListRules",
+      "wafv2:GetIPSet",
+      "wafv2:GetLoggingConfiguration",
+      "wafv2:GetRegexPatternSet",
+      "wafv2:GetRuleGroup",
+      "wafv2:ListLoggingConfigurations",
+      "xray:BatchGetTraces",
+      "xray:GetTraceSummaries"
+    ]
+    resources = ["*"]
+  }
 }
 
 resource "aws_iam_policy" "datadog_aws_integration" {
-   name = "DatadogAWSIntegrationPolicy"
-   policy = data.aws_iam_policy_document.datadog_aws_integration.json
+  name   = "DatadogAWSIntegrationPolicy"
+  policy = data.aws_iam_policy_document.datadog_aws_integration.json
 }
 
 resource "aws_iam_role" "datadog_aws_integration" {
-   name = "DatadogAWSIntegrationRole"
-   description = "Role for Datadog AWS Integration"
-   assume_role_policy = data.aws_iam_policy_document.datadog_aws_integration_assume_role.json
+  name               = "DatadogAWSIntegrationRole"
+  description        = "Role for Datadog AWS Integration"
+  assume_role_policy = data.aws_iam_policy_document.datadog_aws_integration_assume_role.json
 }
 
 resource "aws_iam_role_policy_attachment" "datadog_aws_integration" {
-   role = aws_iam_role.datadog_aws_integration.name
-   policy_arn = aws_iam_policy.datadog_aws_integration.arn
+  role       = aws_iam_role.datadog_aws_integration.name
+  policy_arn = aws_iam_policy.datadog_aws_integration.arn
 }
 
 resource "aws_iam_role_policy_attachment" "datadog_aws_integration_security_audit" {
-   role = aws_iam_role.datadog_aws_integration.name
-   policy_arn = "arn:aws:iam::aws:policy/SecurityAudit"
+  role       = aws_iam_role.datadog_aws_integration.name
+  policy_arn = "arn:aws:iam::aws:policy/SecurityAudit"
 }
 
 data "aws_caller_identity" "current" {}
 
 resource "datadog_integration_aws" "datadog" {
-  account_id  = data.aws_caller_identity.current.account_id
-  role_name   = "DatadogAWSIntegrationRole"
+  account_id = data.aws_caller_identity.current.account_id
+  role_name  = "DatadogAWSIntegrationRole"
 }
 
 
@@ -167,7 +168,7 @@ resource "datadog_dashboard" "RDS" {
     content {
       timeseries_definition {
         request {
-          q            = "avg:${widget.value}{dbinstanceidentifier:*} by {dbinstanceidentifier}" #TODO
+          q            = "avg:${widget.value}{dbinstanceidentifier:*} by {dbinstanceidentifier}" #TODO What is the todo?
           display_type = "line"
         }
         title = widget.value
@@ -182,14 +183,15 @@ resource "datadog_dashboard" "RDS" {
 resource "datadog_monitor" "RDS" {
   for_each = var.metrics_rds
 
-  name     = "RDS Alert for ${each.value}"
-  type     = "metric alert"
-  query = "avg(last_1h):avg:${each.value}{dbinstanceidentifier:*} by {dbinstanceidentifier} > 80" #TODO
+  name  = "RDS Alert for ${each.value}"
+  type  = "metric alert"
+  query = "avg(last_1h):avg:${each.value}{dbinstanceidentifier:*} by {dbinstanceidentifier} > 80" #TODO ?
 
   monitor_thresholds {
     critical = 80
   }
 
+  //TODO make it notify a variable or even list of emails. Also implement anywhere else there are alerts
   message = <<EOT
 Alert triggered for: {{dbinstanceidentifier.id}}.
 Notify: @aleidy@iliosllc.com
@@ -234,8 +236,8 @@ resource "datadog_dashboard" "Elasticache" {
 resource "datadog_monitor" "Elasticache" {
   for_each = var.metrics_elasticache
 
-  name     = "Elasticache Alert for ${each.value}"
-  type     = "metric alert"
+  name  = "Elasticache Alert for ${each.value}"
+  type  = "metric alert"
   query = "avg(last_1h):avg:${each.value}{placeholder:*} by {placeholder} > 80" #TODO
 
   monitor_thresholds {
@@ -248,6 +250,7 @@ Notify: @aleidy@iliosllc.com
 See more details in Datadog: https://app.datadoghq.com/monitors
 EOT
 
+  // TODO do we have any other information that can be used to make this more meaningful?
   escalation_message = "Please investigate this alert."
 
   tags = [
@@ -286,8 +289,8 @@ resource "datadog_dashboard" "Lambda" {
 resource "datadog_monitor" "Lambda" {
   for_each = var.metrics_lambda
 
-  name     = "Lambda Alert for ${each.value}"
-  type     = "metric alert"
+  name  = "Lambda Alert for ${each.value}"
+  type  = "metric alert"
   query = "avg(last_1h):avg:${each.value}{functionname:*} by {functionname} > 80" #TODO
 
   monitor_thresholds {
@@ -339,13 +342,13 @@ resource "datadog_dashboard" "app_dashboard" {
 resource "datadog_monitor" "app_alerts" {
   for_each = var.metrics_elasticbean
 
-  name     = "App ElasticBean Alert for ${each.value}"
-  type     = "metric alert"
-  query    = "avg(last_1h):avg:${each.value}{elasticbeanstalk_environment-name:*} by {elasticbeanstalk_environment-name} > 80"
+  name  = "App ElasticBean Alert for ${each.value}"
+  type  = "metric alert"
+  query = "avg(last_1h):avg:${each.value}{elasticbeanstalk_environment-name:*} by {elasticbeanstalk_environment-name} > 80"
   monitor_thresholds {
     critical = 80
   }
-  message  = <<EOT
+  message            = <<EOT
 Alert triggered for: {{elasticbeanstalk_environment-name.name}}.
 
 Notify: @aleidy@iliosllc.com
@@ -355,11 +358,11 @@ EOT
 
   tags = ["ElasticBeanStalk"]
 
-  notify_no_data   = false
+  notify_no_data = false
 
   renotify_interval = 60  # Renotify after 60 minutes if the issue persists
 
-  timeout_h    = 0  # No timeout for alerts
+  timeout_h = 0  # No timeout for alerts
 }
 
 #LoadBalancer
@@ -388,8 +391,8 @@ resource "datadog_dashboard" "loadbalancer" {
 resource "datadog_monitor" "loadbalancer" {
   for_each = var.metrics_loadbalancer
 
-  name     = "Loadbalancer Alert for ${each.value}"
-  type     = "metric alert"
+  name  = "Loadbalancer Alert for ${each.value}"
+  type  = "metric alert"
   query = "avg(last_1h):avg:${each.value}{loadbalancer:*} by {loadbalancer} > 80"
 
   monitor_thresholds {
