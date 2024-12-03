@@ -57,9 +57,8 @@ variable "metrics_elasticbean" {
   type        = set(string)
   default     = [
     "aws.ec2.cpuutilization",
-    "aws.ec2.memoryutilization",
-    "aws.ec2.networkin",
-    "aws.ec2.networkout",
+    "aws.ec2.network_in",
+    "aws.ec2.network_out",
     "third_party_api_call_duration",
     "application_error_count"
   ]
@@ -75,4 +74,10 @@ variable "metrics_loadbalancer" {
     "aws.applicationelb.target_response_time",
     "aws.applicationelb.target_health_failed_count"
   ]
+}
+
+variable "notification_emails" {
+  description = "List of email addresses to notify in case of an alert."
+  type        = list(string)
+  default     = ["@aleidy@iliosllc.com"]
 }

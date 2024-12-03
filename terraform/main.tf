@@ -50,6 +50,8 @@ data "aws_iam_policy_document" "datadog_aws_integration" {
       "ecs:List*",
       "elasticache:Describe*",
       "elasticache:List*",
+      "elasticbeanstalk:DescribeEnvironmentHealth",
+      "elasticbeanstalk:DescribeEnvironmentResources",
       "elasticfilesystem:DescribeAccessPoints",
       "elasticfilesystem:DescribeFileSystems",
       "elasticfilesystem:DescribeTags",
@@ -168,7 +170,7 @@ resource "datadog_dashboard" "RDS" {
     content {
       timeseries_definition {
         request {
-          q            = "avg:${widget.value}{dbinstanceidentifier:*} by {dbinstanceidentifier}" #TODO What is the todo?
+          q            = "avg:${widget.value}{dbinstanceidentifier:*} by {dbinstanceidentifier}"
           display_type = "line"
         }
         title = widget.value
@@ -185,26 +187,24 @@ resource "datadog_monitor" "RDS" {
 
   name  = "RDS Alert for ${each.value}"
   type  = "metric alert"
-  query = "avg(last_1h):avg:${each.value}{dbinstanceidentifier:*} by {dbinstanceidentifier} > 80" #TODO ?
+  query = "avg(last_1h):avg:${each.value}{dbinstanceidentifier:*} by {dbinstanceidentifier} > 80"
 
   monitor_thresholds {
     critical = 80
   }
 
-  //TODO make it notify a variable or even list of emails. Also implement anywhere else there are alerts
   message = <<EOT
 Alert triggered for: {{dbinstanceidentifier.id}}.
-Notify: @aleidy@iliosllc.com
+Notify: ${join(", ", var.notification_emails)}
 See more details in Datadog: https://app.datadoghq.com/monitors
 EOT
 
-  escalation_message = "Please investigate this alert."
+  escalation_message = "Alert triggered for resource {{dbinstanceidentifier.id}} Metric: {{metric_name}}. Please investigate. Details in Datadog: https://app.datadoghq.com/monitors"
 
   tags = [
     "RDS"
   ]
 
-  notify_no_data    = false
   renotify_interval = 60  # Renotify after 60 minutes if the issue persists
   timeout_h         = 0   # No timeout for alerts
 }
@@ -246,12 +246,11 @@ resource "datadog_monitor" "Elasticache" {
 
   message = <<EOT
 Alert triggered for: {{placeholder.name}}.
-Notify: @aleidy@iliosllc.com
+Notify: ${join(", ", var.notification_emails)}
 See more details in Datadog: https://app.datadoghq.com/monitors
 EOT
 
-  // TODO do we have any other information that can be used to make this more meaningful?
-  escalation_message = "Please investigate this alert."
+  escalation_message = "Alert triggered for resource {{placeholder.name}} Metric: {{metric_name}}. Please investigate. Details in Datadog: https://app.datadoghq.com/monitors"
 
   tags = [
     "Elasticache"
@@ -291,79 +290,107 @@ resource "datadog_monitor" "Lambda" {
 
   name  = "Lambda Alert for ${each.value}"
   type  = "metric alert"
-  query = "avg(last_1h):avg:${each.value}{functionname:*} by {functionname} > 80" #TODO
+  query = "avg(last_1h):avg:${each.value}{functionname:*} by {functionname} > 80"
 
-  monitor_thresholds {
-    critical = 80
-  }
+//  monitor_thresholds {
+//    critical = 80
+//  }
 
   message = <<EOT
 Alert triggered for function: {{functionname.name}}.
-Notify: @aleidy@iliosllc.com
+Notify: ${join(", ", var.notification_emails)}
 See more details in Datadog: https://app.datadoghq.com/monitors
 EOT
 
-  escalation_message = "Please investigate this alert."
+  escalation_message = "Alert triggered for resource {{functionname.name}} Metric: {{metric_name}}. Please investigate. Details in Datadog: https://app.datadoghq.com/monitors"
 
   tags = [
     "Lambda"
   ]
 
-  notify_no_data    = false
   renotify_interval = 60  # Renotify after 60 minutes if the issue persists
   timeout_h         = 0   # No timeout for alerts
 }
 
 #ElasticBeanStalk
-resource "datadog_dashboard" "app_dashboard" {
-  #Creates a dashboard per application
+resource "datadog_dashboard" "app_red_dashboard" {
   for_each = var.application_elasticbean
 
-  title       = "ElasticBean ${each.value} Dashboard"
+  title       = "${each.value} Dashboard (RED)"
   layout_type = "ordered"
 
-  dynamic "widget" {
-    for_each = var.metrics_elasticbean
-    content {
-      timeseries_definition {
-        request {
-          q            = "avg:${widget.value}{elasticbeanstalk_environment-name:*} by {elasticbeanstalk_environment-name}"
-          display_type = "line"
-        }
-        title = replace(widget.value, "aws.ec2.", "")
-        yaxis {
-          scale = "linear"
-        }
+  # Panel 1: Total Request Count
+  widget {
+    timeseries_definition {
+      request {
+        q            = "sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:*} by {elasticbeanstalk_environment-name}"
+        display_type = "bars"
+      }
+      title        = "Request Count"
+      show_legend  = true
+      yaxis {
+        scale = "linear"
+      }
+    }
+  }
+
+  # Panel 2: Error Rate Percentage vs Success Percentage
+  widget {
+    timeseries_definition {
+      request {
+        q            = "100 * sum:application_error_count{elasticbeanstalk_environment-name:*} by {elasticbeanstalk_environment-name} / sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:*} by {elasticbeanstalk_environment-name}, 100 * (sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:*} by {elasticbeanstalk_environment-name} - sum:application_error_count{elasticbeanstalk_environment-name:*} by {elasticbeanstalk_environment-name}) / sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:*} by {elasticbeanstalk_environment-name}"
+        display_type = "line"
+      }
+      title        = "Error Rate vs Success Percentage"
+      show_legend  = true
+      yaxis {
+        scale        = "linear"
+        include_zero = true
+        min          = 0
+        max          = 100
+      }
+    }
+  }
+
+  # Panel 3: Request Latency (p90, p95, p99)
+  widget {
+    timeseries_definition {
+      request {
+        q            = "avg:aws.elasticbeanstalk.application_latency_p_9_0{elasticbeanstalk_environment-name:*} by {elasticbeanstalk_environment-name},avg:aws.elasticbeanstalk.application_latency_p_9_5{elasticbeanstalk_environment-name:*} by {elasticbeanstalk_environment-name},avg:aws.elasticbeanstalk.application_latency_p_9_9_9{elasticbeanstalk_environment-name:*} by {elasticbeanstalk_environment-name}"
+        display_type = "line"
+      }
+      title        = "Request Latency (p90, p95, p99)"
+      show_legend  = true
+      yaxis {
+        scale = "linear"
       }
     }
   }
 }
 
-resource "datadog_monitor" "app_alerts" {
-  for_each = var.metrics_elasticbean
-
-  name  = "App ElasticBean Alert for ${each.value}"
-  type  = "metric alert"
-  query = "avg(last_1h):avg:${each.value}{elasticbeanstalk_environment-name:*} by {elasticbeanstalk_environment-name} > 80"
-  monitor_thresholds {
-    critical = 80
-  }
-  message            = <<EOT
-Alert triggered for: {{elasticbeanstalk_environment-name.name}}.
-
-Notify: @aleidy@iliosllc.com
-See more details in Datadog: https://app.datadoghq.com/monitors
-EOT
-  escalation_message = "check alert"
-
-  tags = ["ElasticBeanStalk"]
-
-  notify_no_data = false
-
-  renotify_interval = 60  # Renotify after 60 minutes if the issue persists
-
-  timeout_h = 0  # No timeout for alerts
-}
+//resource "datadog_monitor" "app_alerts" {
+//  for_each = var.metrics_elasticbean
+//
+//  name  = "App ElasticBean Alert for ${each.value}"
+//  type  = "metric alert"
+//  query = "avg(last_1h):avg:${each.value}{elasticbeanstalk_environment-name:*} by {elasticbeanstalk_environment-name} > 60000"
+////  monitor_thresholds {
+////    critical = 80
+////  }
+//  message            = <<EOT
+//Alert triggered for: {{elasticbeanstalk_environment-name.name}}.
+//
+//Notify: ${join(", ", var.notification_emails)}
+//See more details in Datadog: https://app.datadoghq.com/monitors
+//EOT
+//  escalation_message = "Alert triggered for resource {{elasticbeanstalk_environment-name.name}} Metric: {{metric_name}}. Please investigate. Details in Datadog: https://app.datadoghq.com/monitors"
+//
+//  tags = ["ElasticBeanStalk"]
+//
+//  renotify_interval = 60  # Renotify after 60 minutes if the issue persists
+//
+//  timeout_h = 0  # No timeout for alerts
+//}
 
 #LoadBalancer
 resource "datadog_dashboard" "loadbalancer" {
@@ -395,27 +422,21 @@ resource "datadog_monitor" "loadbalancer" {
   type  = "metric alert"
   query = "avg(last_1h):avg:${each.value}{loadbalancer:*} by {loadbalancer} > 80"
 
-  monitor_thresholds {
-    critical = 80
-  }
+//  monitor_thresholds {
+//    critical = 80
+//  }
 
   message = <<EOT
 Alert triggered for: {{loadbalancer.name}}.
-Notify: @aleidy@iliosllc.com
+Notify: ${join(", ", var.notification_emails)}
 See more details in Datadog: https://app.datadoghq.com/monitors
 EOT
 
-  escalation_message = "Please investigate this alert."
+  escalation_message = "Alert triggered for resource {{loadbalancer.name}} Metric: {{metric_name}}. Please investigate. Details in Datadog: https://app.datadoghq.com/monitors"
 
   tags = [
     "loadbalancer"
   ]
-
-  notify_no_data    = false
   renotify_interval = 60  # Renotify after 60 minutes if the issue persists
   timeout_h         = 0   # No timeout for alerts
 }
-
-
-
-
