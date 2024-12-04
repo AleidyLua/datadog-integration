@@ -54,15 +54,34 @@ variable "application_elasticbean" {
 
 variable "metrics_elasticbean" {
   description = "List of metrics for Elastic Beanstalk"
-  type        = set(string)
-  default     = [
-    "aws.ec2.cpuutilization",
-    "aws.ec2.memoryutilization",
-    "aws.ec2.networkin",
-    "aws.ec2.networkout",
-    "third_party_api_call_duration",
-    "application_error_count"
+  type        = list(object(
+    {
+      query = string
+      title = string
+    }
+  ))
+  default = [
+    {
+      query = "aws.ec2.cpuutilization{elasticbeanstalk_environment-name:your-environment-name}, aws.ec2.cpuutilization.maximum{elasticbeanstalk_environment-name:your-environment-name}"
+      title = "Cpu Utilization"
+    },
+     {
+      query = "aws.ec2.memoryutilization{elasticbeanstalk_environment-name:your-environment-name}, max:aws.ec2.memoryutilization{elasticbeanstalk_environment-name:your-environment-name}"
+      title = "Memory Utilization"
+    },
+#      {
+#       query = "avg:aws.ec2.cpuutilization{elasticbeanstalk_environment-name:your-environment-name}, max:aws.ec2.cpuutilization{elasticbeanstalk_environment-name:your-environment-name}"
+#       title = "Cpu Utilization"
+#     }
   ]
+#   default     = [
+#     "aws.ec2.cpuutilization",
+#     "aws.ec2.memoryutilization",
+#     "aws.ec2.networkin",
+#     "aws.ec2.networkout",
+#     "third_party_api_call_duration",
+#     "application_error_count"
+#   ]
 }
 
 variable "metrics_loadbalancer" {

@@ -61,3 +61,6 @@ To monitor additional metrics, update the respective variable in the `variables.
 - **Dashboards**: Custom dashboards for RDS, Elasticache, Lambda, Elastic Beanstalk, and Application Load Balancer.
 - **Monitors**: Metric-based alerts for each service.
 
+
+# TODO: 
+ zip ../TicketsProject.zip -r * .[^.]*
