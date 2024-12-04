@@ -18,23 +18,23 @@ locals {
 
   # Elasticache Metrics
   elasticache_metric_queries = {
-    cpu_utilization    = "avg(last_1h):avg:aws.elasticache.cpuutilization{cacheclusterid:*} by {cacheclusterid} > 80"
-    swap_usage         = "avg(last_1h):avg:aws.elasticache.swapusage{cacheclusterid:*} by {cacheclusterid} > 50"
-    evictions          = "avg(last_1h):avg:aws.elasticache.evictions{cacheclusterid:*} by {cacheclusterid} > 100"
+    cpu_utilization = "avg(last_1h):avg:aws.elasticache.cpuutilization{cacheclusterid:*} by {cacheclusterid} > 80"
+    swap_usage      = "avg(last_1h):avg:aws.elasticache.swapusage{cacheclusterid:*} by {cacheclusterid} > 50"
+    evictions       = "avg(last_1h):avg:aws.elasticache.evictions{cacheclusterid:*} by {cacheclusterid} > 100"
   }
 
   # Lambda Metrics
   lambda_metric_queries = {
-    invocation_count   = "avg(last_1h):avg:aws.lambda.invocations{functionname:*} by {functionname} > 1000"
-    error_count        = "avg(last_1h):avg:aws.lambda.errors{functionname:*} by {functionname} > 10"
-    duration_p99       = "avg(last_1h):avg:aws.lambda.duration.p99{functionname:*} by {functionname} > 3000"
+    invocation_count = "avg(last_1h):avg:aws.lambda.invocations{functionname:*} by {functionname} > 1000"
+    error_count      = "avg(last_1h):avg:aws.lambda.errors{functionname:*} by {functionname} > 10"
+    duration_p99     = "avg(last_1h):avg:aws.lambda.duration.p99{functionname:*} by {functionname} > 3000"
   }
 
   # LoadBalancer Metrics
   loadbalancer_metric_queries = {
-    healthy_host_count = "avg(last_1h):avg:aws.elb.healthy_host_count{loadbalancer:*} by {loadbalancer} < 2"
-    request_count      = "avg(last_1h):avg:aws.elb.request_count{loadbalancer:*} by {loadbalancer} > 50000"
-    latency_p99        = "avg(last_1h):avg:aws.elb.latency.p99{loadbalancer:*} by {loadbalancer} > 5"
+    connection_error_count = "avg(last_1h):avg:aws.applicationelb.target_connection_error_count{loadbalancer:*} by {loadbalancer} < 2"
+    request_count          = "avg(last_1h):aws.applicationelb.request_count{loadbalancer:*} by {loadbalancer} > 50000"
+    latency_p99            = "avg(last_1h):avg:aws.applicationelb.target_response_time.p99{loadbalancer:*} by {loadbalancer} > 5"
   }
 }
 
@@ -54,7 +54,7 @@ Details in Datadog: https://app.datadoghq.com/monitors
 EOT
 
   escalation_message = "Elastic Beanstalk Alert for {{elasticbeanstalk_environment-name.name}}: ${each.key}. Investigate at: https://app.datadoghq.com/monitors"
-  tags = ["ElasticBeanstalk", each.key]
+  tags               = ["ElasticBeanstalk", each.key]
 
   renotify_interval = 60
   timeout_h         = 0
@@ -76,7 +76,7 @@ Details in Datadog: https://app.datadoghq.com/monitors
 EOT
 
   escalation_message = "RDS Alert for {{dbinstanceidentifier.id}}: ${each.key}. Investigate at: https://app.datadoghq.com/monitors"
-  tags = ["RDS", each.key]
+  tags               = ["RDS", each.key]
 
   renotify_interval = 60
   timeout_h         = 0
@@ -98,7 +98,7 @@ Details in Datadog: https://app.datadoghq.com/monitors
 EOT
 
   escalation_message = "Elasticache Alert for {{cacheclusterid.name}}: ${each.key}. Investigate at: https://app.datadoghq.com/monitors"
-  tags = ["Elasticache", each.key]
+  tags               = ["Elasticache", each.key]
 
   renotify_interval = 60
   timeout_h         = 0
@@ -120,7 +120,7 @@ Details in Datadog: https://app.datadoghq.com/monitors
 EOT
 
   escalation_message = "Lambda Alert for {{functionname.name}}: ${each.key}. Investigate at: https://app.datadoghq.com/monitors"
-  tags = ["Lambda", each.key]
+  tags               = ["Lambda", each.key]
 
   renotify_interval = 60
   timeout_h         = 0
@@ -142,7 +142,7 @@ Details in Datadog: https://app.datadoghq.com/monitors
 EOT
 
   escalation_message = "LoadBalancer Alert for {{loadbalancer.name}}: ${each.key}. Investigate at: https://app.datadoghq.com/monitors"
-  tags = ["LoadBalancer", each.key]
+  tags               = ["LoadBalancer", each.key]
 
   renotify_interval = 60
   timeout_h         = 0

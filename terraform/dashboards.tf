@@ -104,8 +104,8 @@ resource "datadog_dashboard" "app_red_dashboard" {
         q            = "sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:*} by {elasticbeanstalk_environment-name}"
         display_type = "bars"
       }
-      title        = "Request Count"
-      show_legend  = true
+      title       = "Request Count"
+      show_legend = true
       yaxis {
         scale = "linear"
       }
@@ -119,8 +119,8 @@ resource "datadog_dashboard" "app_red_dashboard" {
         q            = "100 * sum:application_error_count{elasticbeanstalk_environment-name:*} by {elasticbeanstalk_environment-name} / sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:*} by {elasticbeanstalk_environment-name}, 100 * (sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:*} by {elasticbeanstalk_environment-name} - sum:application_error_count{elasticbeanstalk_environment-name:*} by {elasticbeanstalk_environment-name}) / sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:*} by {elasticbeanstalk_environment-name}"
         display_type = "line"
       }
-      title        = "Error Rate vs Success Percentage"
-      show_legend  = true
+      title       = "Error Rate vs Success Percentage"
+      show_legend = true
       yaxis {
         scale        = "linear"
         include_zero = true
@@ -137,8 +137,8 @@ resource "datadog_dashboard" "app_red_dashboard" {
         q            = "avg:aws.elasticbeanstalk.application_latency_p_9_0{elasticbeanstalk_environment-name:*} by {elasticbeanstalk_environment-name},avg:aws.elasticbeanstalk.application_latency_p_9_5{elasticbeanstalk_environment-name:*} by {elasticbeanstalk_environment-name},avg:aws.elasticbeanstalk.application_latency_p_9_9_9{elasticbeanstalk_environment-name:*} by {elasticbeanstalk_environment-name}"
         display_type = "line"
       }
-      title        = "Request Latency (p90, p95, p99)"
-      show_legend  = true
+      title       = "Request Latency (p90, p95, p99)"
+      show_legend = true
       yaxis {
         scale = "linear"
       }
