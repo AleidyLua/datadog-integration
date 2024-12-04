@@ -13,6 +13,14 @@ terraform {
   }
 }
 
+terraform {
+  backend "s3" {
+    bucket = "721481723200-datadog-integration"
+    key    = "dd.tfstate"
+    region = "us-east-2"
+  }
+}
+
 provider "aws" {
   region = var.region
 }

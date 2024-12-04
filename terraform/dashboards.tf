@@ -91,17 +91,67 @@ resource "datadog_dashboard" "loadbalancer" {
 }
 
 #ElasticBeanStalk
-resource "datadog_dashboard" "app_red_dashboard" {
-  for_each = var.application_elasticbean
 
-  title       = "${each.value} Dashboard (RED)"
+resource "datadog_dashboard" "app_dashboard" {
+  #Creates a dashboard per application
+  for_each = local.dashboard_metrics
+
+  title       = "${each.key} - Dashboard (${terraform.workspace})"
   layout_type = "ordered"
 
+  #   dynamic "widget" {
+  #     for_each = each.value
+
+  # CPU Utilization
+  widget {
+    timeseries_definition {
+      request {
+        q            = "aws.ec2.cpuutilization{elasticbeanstalk_environment-name:ebs-app}, aws.ec2.cpuutilization.maximum{elasticbeanstalk_environment-name:ebs-app}"
+        display_type = "line"
+      }
+      title       = "CPU Utilization"
+      show_legend = true
+      yaxis {
+        scale = "linear"
+      }
+    }
+  }
+  # Memory Utilization
+  widget {
+    timeseries_definition {
+      title       = "Memory Utilization"
+      show_legend = true
+      yaxis {
+        scale = "linear"
+      }
+      request {
+        display_type = "line"
+        formula {
+          formula_expression = "(total_memory - usable_memory) / total_memory * 100"
+          alias              = "memory_utilized_percent"
+        }
+        query {
+          metric_query {
+            data_source = "metrics"
+
+            query = "avg:system.mem.total{elasticbeanstalk_environment-name:ebs-app}" # TODO
+            name = "total_memory"
+          }
+        }
+        query {
+          metric_query {
+            query = "avg:system.mem.usable{elasticbeanstalk_environment-name:ebs-app}" # TODO
+            name = "usable_memory"
+          }
+        }
+      }
+    }
+  }
   # Panel 1: Total Request Count
   widget {
     timeseries_definition {
       request {
-        q            = "sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:*} by {elasticbeanstalk_environment-name}"
+        q            = "sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:ebs-app}"
         display_type = "bars"
       }
       title       = "Request Count"
@@ -116,7 +166,7 @@ resource "datadog_dashboard" "app_red_dashboard" {
   widget {
     timeseries_definition {
       request {
-        q            = "100 * sum:application_error_count{elasticbeanstalk_environment-name:*} by {elasticbeanstalk_environment-name} / sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:*} by {elasticbeanstalk_environment-name}, 100 * (sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:*} by {elasticbeanstalk_environment-name} - sum:application_error_count{elasticbeanstalk_environment-name:*} by {elasticbeanstalk_environment-name}) / sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:*} by {elasticbeanstalk_environment-name}"
+        q            = "100 * sum:application_error_count{elasticbeanstalk_environment-name:ebs-app} / sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:ebs-app}, 100 * (sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:ebs-app} - sum:application_error_count{elasticbeanstalk_environment-name:ebs-app}) / sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:ebs-app}"
         display_type = "line"
       }
       title       = "Error Rate vs Success Percentage"
@@ -145,3 +195,18 @@ resource "datadog_dashboard" "app_red_dashboard" {
     }
   }
 }
+#         request {
+#           q            = widget.value.query
+#           display_type = "line"
+#         }
+#         title       = widget.value.title
+#         show_legend = true
+#         yaxis {
+#           scale = "linear"
+#         }
+#       }
+#       }
+
+#     }
+#   }
+# }
