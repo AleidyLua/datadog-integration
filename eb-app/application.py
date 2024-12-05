@@ -30,19 +30,31 @@ def home():
         end_time = datetime.now()
         duration = (end_time - start_time).total_seconds()
 
+        # Get the current request path
+        request_path = request.path
+
         # Send custom metric for API call duration
         datadog.api.Metric.send(
-            metric="third_party_api_call_duration",
+            metric="application_request_duration",
             points=[duration],
-            # tags=["api_provider:external_service", "endpoint:/"]
+            tags=[f"endpoint:{request_path}"]
         )
+
+        # Send custom metric for HTTP status code
+        datadog.api.Metric.send(
+            metric="application_request_code",
+            points=[response.status_code],
+            tags=[f"endpoint:{request_path}"]
+        )
+
         print(response.json())
     except Exception as e:
         # Send application error metric
+        request_path = request.path
         datadog.api.Metric.send(
             metric="application_error_count",
             points=1,
-            # tags=["error_type:api_request_failure", "endpoint:/"]
+            tags=["error_type:api_request_failure", f"endpoint:{request_path}"]
         )
         print(f"Error occurred: {e}")
 
@@ -72,23 +84,25 @@ def cat_route():
         duration = (end_time - start_time).total_seconds()
 
         # Get the current request path
-        request_path = request.path  # This dynamically gets the request path (e.g., /cat)
+        request_path = request.path
 
         # Send custom metric for API call duration
         datadog.api.Metric.send(
-            metric="third_party_api_call_duration",
-            points=[duration],
-            # tags=["api_provider:external_service", f"endpoint:{request_path}"]
+            metric="third_party_request",
+            points=1,
+            tags=[f"parent_path:{request_path}","path:v1/images/search", "outcome:success", "method:GET", "host:https://api.thecatapi.com", f"duration:{duration}", f"status_code:{response.status_code}", "third_party_service:TheCatApi"]
         )
+
         print(f"Request Path: {request_path}")
         print(response.json())
     except Exception as e:
         # Send application error metric
         request_path = request.path
         datadog.api.Metric.send(
-            metric="application_error_count",
+            metric="third_party_request",
             points=1,
-            # tags=["error_type:api_request_failure", f"endpoint:{request_path}"]
+            tags=[f"parent_path:{request_path}", "path:v1/images/search", "outcome:failure", "method:GET", "host:https://api.thecatapi.com",
+                  f"duration:0", f"status_code:{response.status_code}", "third_party_service:TheCatApi"]
         )
         print(f"Error occurred: {e}")
 
