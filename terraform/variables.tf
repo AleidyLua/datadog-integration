@@ -139,3 +139,7 @@ variable "notification_emails" {
   type        = list(string)
   default     = ["@aleidy@iliosllc.com"]
 }
+
+variable "elasticbean_env" {
+  default = "eb-app"
+}

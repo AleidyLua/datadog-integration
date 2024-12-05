@@ -134,13 +134,13 @@ resource "datadog_dashboard" "app_dashboard" {
           metric_query {
             data_source = "metrics"
 
-            query = "avg:system.mem.total{elasticbeanstalk_environment-name:ebs-app}" # TODO
+            query = "avg:system.mem.total{elasticbeanstalk_environment-name:${var.elasticbean_env}}" # TODO
             name = "total_memory"
           }
         }
         query {
           metric_query {
-            query = "avg:system.mem.usable{elasticbeanstalk_environment-name:ebs-app}" # TODO
+            query = "avg:system.mem.usable{elasticbeanstalk_environment-name:${var.elasticbean_env}}" # TODO
             name = "usable_memory"
           }
         }
@@ -151,7 +151,7 @@ resource "datadog_dashboard" "app_dashboard" {
   widget {
     timeseries_definition {
       request {
-        q            = "sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:ebs-app}"
+        q            = "sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:${var.elasticbean_env}}"
         display_type = "bars"
       }
       title       = "Request Count"
@@ -166,7 +166,7 @@ resource "datadog_dashboard" "app_dashboard" {
   widget {
     timeseries_definition {
       request {
-        q            = "100 * sum:application_error_count{elasticbeanstalk_environment-name:ebs-app} / sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:ebs-app}, 100 * (sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:ebs-app} - sum:application_error_count{elasticbeanstalk_environment-name:ebs-app}) / sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:ebs-app}"
+        q            = "100 * sum:application_error_count{elasticbeanstalk_environment-name:${var.elasticbean_env}} / sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:${var.elasticbean_env}}, 100 * (sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:${var.elasticbean_env}} - sum:application_error_count{elasticbeanstalk_environment-name:${var.elasticbean_env}}) / sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:${var.elasticbean_env}}"
         display_type = "line"
       }
       title       = "Error Rate vs Success Percentage"
@@ -210,3 +210,14 @@ resource "datadog_dashboard" "app_dashboard" {
 #     }
 #   }
 # }
+
+
+
+
+
+resource "datadog_dashboard_json" "dashboard_json" {
+  dashboard = templatefile("${path.module}/dashboard.json.tmpl", {
+    elasticbeanstalk_env = var.elasticbean_env
+  })
+}
+
