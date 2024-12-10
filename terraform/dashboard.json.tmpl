@@ -1,743 +1,1031 @@
 {
-    "title": "ebs-app - Dashboard (default) (tf)",
-    "description": "[[suggested_dashboards]] (cloned)",
+    "title": "${elasticbeanstalk_env} - Dashboard",
+    "description": "This dashboard provides a comprehensive overview of the performance, health, and resource utilization of the Elastic Beanstalk application.",
     "widgets": [
         {
-            "id": 7077875965463306,
+            "id": 2769580434087504,
             "definition": {
-                "title": "Application Health",
-                "title_size": "16",
-                "title_align": "left",
-                "type": "query_value",
-                "requests": [
+                "title": "Environment Health",
+                "show_title": true,
+                "type": "group",
+                "layout_type": "ordered",
+                "widgets": [
                     {
-                        "formulas": [
-                            {
-                                "formula": "query1"
+                        "id": 7077875965463306,
+                        "definition": {
+                            "title": "Application Health",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "type": "query_value",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "formula": "query1"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "name": "query1",
+                                            "data_source": "metrics",
+                                            "query": "avg:aws.elasticbeanstalk.environment_health{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}",
+                                            "aggregator": "last"
+                                        }
+                                    ],
+                                    "response_format": "scalar",
+                                    "conditional_formats": [
+                                        {
+                                            "comparator": "=",
+                                            "value": 0,
+                                            "palette": "white_on_green"
+                                        },
+                                        {
+                                            "comparator": "=",
+                                            "value": 5,
+                                            "palette": "black_on_light_green"
+                                        },
+                                        {
+                                            "comparator": "=",
+                                            "value": 10,
+                                            "palette": "custom_bg",
+                                            "custom_bg_color": "#c4c0c0"
+                                        },
+                                        {
+                                            "comparator": "=",
+                                            "value": 15,
+                                            "palette": "white_on_yellow"
+                                        },
+                                        {
+                                            "comparator": "=",
+                                            "value": 20,
+                                            "palette": "black_on_light_red"
+                                        },
+                                        {
+                                            "comparator": "=",
+                                            "value": 25,
+                                            "palette": "white_on_red"
+                                        },
+                                        {
+                                            "comparator": "=",
+                                            "value": 1,
+                                            "palette": "custom_bg",
+                                            "custom_bg_color": "#5380e9"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "autoscale": true,
+                            "precision": 0,
+                            "timeseries_background": {
+                                "yaxis": {
+                                    "include_zero": false
+                                },
+                                "type": "area"
                             }
-                        ],
-                        "queries": [
-                            {
-                                "name": "query1",
-                                "data_source": "metrics",
-                                "query": "avg:aws.elasticbeanstalk.environment_health{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}",
-                                "aggregator": "last"
-                            }
-                        ],
-                        "response_format": "scalar",
-                        "conditional_formats": [
-                            {
-                                "comparator": "=",
-                                "value": 0,
-                                "palette": "white_on_green"
-                            },
-                            {
-                                "comparator": "=",
-                                "value": 5,
-                                "palette": "black_on_light_green"
-                            },
-                            {
-                                "comparator": "=",
-                                "value": 10,
-                                "palette": "black_on_light_yellow"
-                            },
-                            {
-                                "comparator": "=",
-                                "value": 15,
-                                "palette": "white_on_yellow"
-                            },
-                            {
-                                "comparator": "=",
-                                "value": 20,
-                                "palette": "black_on_light_red"
-                            },
-                            {
-                                "comparator": "=",
-                                "value": 25,
-                                "palette": "white_on_red"
-                            }
-                        ]
-                    }
-                ],
-                "autoscale": true,
-                "precision": 0,
-                "timeseries_background": {
-                    "yaxis": {
-                        "include_zero": false
+                        }
                     },
-                    "type": "area"
-                }
-            }
-        },
-        {
-            "id": 7590440659544118,
-            "definition": {
-                "title": "Instance Health",
-                "title_size": "16",
-                "title_align": "left",
-                "show_legend": true,
-                "legend_layout": "horizontal",
-                "legend_columns": [
-                    "avg",
-                    "min",
-                    "max",
-                    "value",
-                    "sum"
-                ],
-                "type": "timeseries",
-                "requests": [
                     {
-                        "formulas": [
-                            {
-                                "alias": "Degraded",
-                                "formula": "query1"
-                            },
-                            {
-                                "alias": "Info",
-                                "formula": "query2"
-                            },
-                            {
-                                "alias": "No Data",
-                                "formula": "query3"
-                            },
-                            {
-                                "alias": "Ok",
-                                "formula": "query4"
-                            },
-                            {
-                                "alias": "Pending",
-                                "formula": "query5"
-                            },
-                            {
-                                "alias": "Severe",
-                                "formula": "query6"
-                            },
-                            {
-                                "alias": "Warning",
-                                "formula": "query7"
-                            },
-                            {
-                                "alias": "Unknown",
-                                "formula": "query8"
+                        "id": 7590440659544118,
+                        "definition": {
+                            "title": "Instance Health",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "show_legend": true,
+                            "legend_layout": "horizontal",
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "type": "timeseries",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "alias": "Degraded",
+                                            "formula": "query1"
+                                        },
+                                        {
+                                            "alias": "Info",
+                                            "formula": "query2"
+                                        },
+                                        {
+                                            "alias": "No Data",
+                                            "formula": "query3"
+                                        },
+                                        {
+                                            "alias": "Ok",
+                                            "formula": "query4"
+                                        },
+                                        {
+                                            "alias": "Pending",
+                                            "formula": "query5"
+                                        },
+                                        {
+                                            "alias": "Severe",
+                                            "formula": "query6"
+                                        },
+                                        {
+                                            "alias": "Warning",
+                                            "formula": "query7"
+                                        },
+                                        {
+                                            "alias": "Unknown",
+                                            "formula": "query8"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "name": "query1",
+                                            "data_source": "metrics",
+                                            "query": "sum:aws.elasticbeanstalk.instances_degraded{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        },
+                                        {
+                                            "name": "query2",
+                                            "data_source": "metrics",
+                                            "query": "sum:aws.elasticbeanstalk.instances_info{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        },
+                                        {
+                                            "name": "query3",
+                                            "data_source": "metrics",
+                                            "query": "sum:aws.elasticbeanstalk.instances_no_data{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        },
+                                        {
+                                            "name": "query4",
+                                            "data_source": "metrics",
+                                            "query": "sum:aws.elasticbeanstalk.instances_ok{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        },
+                                        {
+                                            "name": "query5",
+                                            "data_source": "metrics",
+                                            "query": "sum:aws.elasticbeanstalk.instances_no_data{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        },
+                                        {
+                                            "name": "query6",
+                                            "data_source": "metrics",
+                                            "query": "sum:aws.elasticbeanstalk.instances_severe{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        },
+                                        {
+                                            "name": "query7",
+                                            "data_source": "metrics",
+                                            "query": "sum:aws.elasticbeanstalk.instances_warning{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        },
+                                        {
+                                            "name": "query8",
+                                            "data_source": "metrics",
+                                            "query": "sum:aws.elasticbeanstalk.instances_unknown{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "palette": "datadog16",
+                                        "order_by": "values",
+                                        "line_type": "solid",
+                                        "line_width": "normal"
+                                    },
+                                    "display_type": "line"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "id": 7736171669733324,
+                        "definition": {
+                            "title": "Instance Health Percentage",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "show_legend": true,
+                            "legend_layout": "horizontal",
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "type": "timeseries",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "alias": "Healthy",
+                                            "formula": "(query4) / (query1 + query2 + query3 + query4 + query5 + query6 + query7 + query8) * 100"
+                                        },
+                                        {
+                                            "alias": "Unhealthy",
+                                            "formula": "(query1 + query6 + query7) / (query1 + query2 + query3 + query4 + query5 + query6 + query7 + query8) * 100"
+                                        },
+                                        {
+                                            "alias": "Pending/Info/NoData",
+                                            "formula": "(query2 + query3 + query5) / (query1 + query2 + query3 + query4 + query5 + query6 + query7 + query8) * 100"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "name": "query4",
+                                            "data_source": "metrics",
+                                            "query": "sum:aws.elasticbeanstalk.instances_ok{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        },
+                                        {
+                                            "name": "query1",
+                                            "data_source": "metrics",
+                                            "query": "sum:aws.elasticbeanstalk.instances_degraded{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        },
+                                        {
+                                            "name": "query2",
+                                            "data_source": "metrics",
+                                            "query": "sum:aws.elasticbeanstalk.instances_info{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        },
+                                        {
+                                            "name": "query3",
+                                            "data_source": "metrics",
+                                            "query": "sum:aws.elasticbeanstalk.instances_no_data{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        },
+                                        {
+                                            "name": "query5",
+                                            "data_source": "metrics",
+                                            "query": "sum:aws.elasticbeanstalk.instances_pending{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        },
+                                        {
+                                            "name": "query6",
+                                            "data_source": "metrics",
+                                            "query": "sum:aws.elasticbeanstalk.instances_severe{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        },
+                                        {
+                                            "name": "query7",
+                                            "data_source": "metrics",
+                                            "query": "sum:aws.elasticbeanstalk.instances_warning{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        },
+                                        {
+                                            "name": "query8",
+                                            "data_source": "metrics",
+                                            "query": "sum:aws.elasticbeanstalk.instances_unknown{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "palette": "datadog16",
+                                        "order_by": "values",
+                                        "line_type": "solid",
+                                        "line_width": "normal"
+                                    },
+                                    "display_type": "line"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "id": 1103778836723517,
+                        "definition": {
+                            "title": "CPU Utilization",
+                            "show_legend": true,
+                            "legend_layout": "horizontal",
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "type": "timeseries",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "alias": "Avg CPU",
+                                            "formula": "query1"
+                                        },
+                                        {
+                                            "alias": "Max CPU",
+                                            "formula": "query2"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "aws.ec2.cpuutilization{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "aws.ec2.cpuutilization.maximum{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "palette": "datadog16",
+                                        "line_type": "solid",
+                                        "line_width": "normal"
+                                    },
+                                    "display_type": "line"
+                                }
+                            ],
+                            "yaxis": {
+                                "include_zero": true,
+                                "scale": "linear",
+                                "min": "0",
+                                "max": "100"
                             }
-                        ],
-                        "queries": [
-                            {
-                                "name": "query1",
-                                "data_source": "metrics",
-                                "query": "sum:aws.elasticbeanstalk.instances_degraded{elasticbeanstalk_environment-name:eb-app}.as_count()"
-                            },
-                            {
-                                "name": "query2",
-                                "data_source": "metrics",
-                                "query": "sum:aws.elasticbeanstalk.instances_info{elasticbeanstalk_environment-name:eb-app}.as_count()"
-                            },
-                            {
-                                "name": "query3",
-                                "data_source": "metrics",
-                                "query": "sum:aws.elasticbeanstalk.instances_no_data{elasticbeanstalk_environment-name:eb-app}.as_count()"
-                            },
-                            {
-                                "name": "query4",
-                                "data_source": "metrics",
-                                "query": "sum:aws.elasticbeanstalk.instances_ok{elasticbeanstalk_environment-name:eb-app}.as_count()"
-                            },
-                            {
-                                "name": "query5",
-                                "data_source": "metrics",
-                                "query": "sum:aws.elasticbeanstalk.instances_no_data{elasticbeanstalk_environment-name:eb-app}.as_count()"
-                            },
-                            {
-                                "name": "query6",
-                                "data_source": "metrics",
-                                "query": "sum:aws.elasticbeanstalk.instances_severe{elasticbeanstalk_environment-name:eb-app}.as_count()"
-                            },
-                            {
-                                "name": "query7",
-                                "data_source": "metrics",
-                                "query": "sum:aws.elasticbeanstalk.instances_warning{elasticbeanstalk_environment-name:eb-app}.as_count()"
-                            },
-                            {
-                                "name": "query8",
-                                "data_source": "metrics",
-                                "query": "sum:aws.elasticbeanstalk.instances_unknown{elasticbeanstalk_environment-name:eb-app}.as_count()"
+                        }
+                    },
+                    {
+                        "id": 1869573086752437,
+                        "definition": {
+                            "title": "Memory Utilization",
+                            "show_legend": true,
+                            "legend_layout": "horizontal",
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "type": "timeseries",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "alias": "Avg Memory",
+                                            "formula": "(total_memory - usable_memory) / total_memory * 100"
+                                        },
+                                        {
+                                            "alias": "Max Memory",
+                                            "formula": "(total_memory - query2) / total_memory * 100"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "total_memory",
+                                            "query": "avg:system.mem.total{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "usable_memory",
+                                            "query": "avg:system.mem.usable{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "max:system.mem.usable{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "palette": "datadog16",
+                                        "line_type": "solid",
+                                        "line_width": "normal"
+                                    },
+                                    "display_type": "line"
+                                }
+                            ],
+                            "yaxis": {
+                                "include_zero": false,
+                                "scale": "linear",
+                                "max": "100"
                             }
-                        ],
-                        "response_format": "timeseries",
-                        "style": {
-                            "palette": "datadog16",
-                            "order_by": "values",
-                            "line_type": "solid",
-                            "line_width": "normal"
-                        },
-                        "display_type": "line"
+                        }
+                    },
+                    {
+                        "id": 8403087392374174,
+                        "definition": {
+                            "title": "Disk Space Utilization",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "show_legend": true,
+                            "legend_layout": "horizontal",
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "type": "timeseries",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "alias": "Avg Disk",
+                                            "formula": "query1"
+                                        },
+                                        {
+                                            "alias": "Max Disk",
+                                            "formula": "query2"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "name": "query1",
+                                            "data_source": "metrics",
+                                            "query": "avg:system.disk.utilized{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}"
+                                        },
+                                        {
+                                            "name": "query2",
+                                            "data_source": "metrics",
+                                            "query": "max:system.disk.utilized{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "palette": "dog_classic",
+                                        "order_by": "values",
+                                        "line_type": "solid",
+                                        "line_width": "normal"
+                                    },
+                                    "display_type": "line"
+                                }
+                            ],
+                            "yaxis": {
+                                "include_zero": true,
+                                "max": "100"
+                            }
+                        }
                     }
                 ]
             }
         },
         {
-            "id": 7736171669733324,
+            "id": 3370722538501248,
             "definition": {
-                "title": "Instance Health Percentage",
-                "title_size": "16",
-                "title_align": "left",
-                "show_legend": true,
-                "legend_layout": "horizontal",
-                "legend_columns": [
-                    "avg",
-                    "min",
-                    "max",
-                    "value",
-                    "sum"
-                ],
-                "type": "timeseries",
-                "requests": [
+                "title": "Requests",
+                "show_title": true,
+                "type": "group",
+                "layout_type": "ordered",
+                "widgets": [
                     {
-                        "formulas": [
-                            {
-                                "alias": "Healthy",
-                                "formula": "(query4) / (query1 + query2 + query3 + query4 + query5 + query6 + query7 + query8) * 100"
-                            },
-                            {
-                                "alias": "Unhealthy",
-                                "formula": "(query1 + query6 + query7) / (query1 + query2 + query3 + query4 + query5 + query6 + query7 + query8) * 100"
-                            },
-                            {
-                                "alias": "Pending/Info/NoData",
-                                "formula": "(query2 + query3 + query5) / (query1 + query2 + query3 + query4 + query5 + query6 + query7 + query8) * 100"
+                        "id": 1370161804941527,
+                        "definition": {
+                            "title": "Success Rate",
+                            "show_legend": true,
+                            "legend_layout": "horizontal",
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "type": "timeseries",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "alias": "Success",
+                                            "formula": "(query3 / query2) * 100"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:aws.elasticbeanstalk.application_requests_5xx{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query4",
+                                            "query": "sum:aws.elasticbeanstalk.application_requests_4xx{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query5",
+                                            "query": "sum:aws.elasticbeanstalk.application_requests_3xx{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query3",
+                                            "query": "sum:aws.elasticbeanstalk.application_requests_2xx{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "palette": "datadog16",
+                                        "line_type": "solid",
+                                        "line_width": "normal"
+                                    },
+                                    "display_type": "line"
+                                }
+                            ],
+                            "yaxis": {
+                                "include_zero": true,
+                                "scale": "linear",
+                                "min": "0",
+                                "max": "100"
                             }
-                        ],
-                        "queries": [
-                            {
-                                "name": "query1",
-                                "data_source": "metrics",
-                                "query": "sum:aws.elasticbeanstalk.instances_degraded{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
-                            },
-                            {
-                                "name": "query2",
-                                "data_source": "metrics",
-                                "query": "sum:aws.elasticbeanstalk.instances_info{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
-                            },
-                            {
-                                "name": "query3",
-                                "data_source": "metrics",
-                                "query": "sum:aws.elasticbeanstalk.instances_no_data{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
-                            },
-                            {
-                                "name": "query4",
-                                "data_source": "metrics",
-                                "query": "sum:aws.elasticbeanstalk.instances_ok{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
-                            },
-                            {
-                                "name": "query5",
-                                "data_source": "metrics",
-                                "query": "sum:aws.elasticbeanstalk.instances_pending{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
-                            },
-                            {
-                                "name": "query6",
-                                "data_source": "metrics",
-                                "query": "sum:aws.elasticbeanstalk.instances_severe{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
-                            },
-                            {
-                                "name": "query7",
-                                "data_source": "metrics",
-                                "query": "sum:aws.elasticbeanstalk.instances_warning{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
-                            },
-                            {
-                                "name": "query8",
-                                "data_source": "metrics",
-                                "query": "sum:aws.elasticbeanstalk.instances_unknown{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                        }
+                    },
+                    {
+                        "id": 250716378181250,
+                        "definition": {
+                            "title": "Total Requests Count",
+                            "show_legend": true,
+                            "legend_layout": "horizontal",
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "type": "timeseries",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "alias": "Request Total",
+                                            "formula": "query2"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "palette": "datadog16",
+                                        "line_type": "solid",
+                                        "line_width": "normal"
+                                    },
+                                    "display_type": "line"
+                                }
+                            ],
+                            "yaxis": {
+                                "include_zero": false,
+                                "scale": "linear",
+                                "min": "auto",
+                                "max": "auto"
                             }
-                        ],
-                        "response_format": "timeseries",
-                        "style": {
-                            "palette": "datadog16",
-                            "order_by": "values",
-                            "line_type": "solid",
-                            "line_width": "normal"
-                        },
-                        "display_type": "line"
+                        }
+                    },
+                    {
+                        "id": 5730717845888088,
+                        "definition": {
+                            "title": "Load Balancer Status Codes",
+                            "title_size": "16",
+                            "title_align": "left",
+                            "show_legend": true,
+                            "legend_layout": "horizontal",
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "type": "timeseries",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "alias": "ELB-5XX",
+                                            "formula": "query1"
+                                        },
+                                        {
+                                            "alias": "5XX",
+                                            "formula": "query2"
+                                        },
+                                        {
+                                            "alias": "2XX",
+                                            "formula": "query3"
+                                        },
+                                        {
+                                            "alias": "ELB-504",
+                                            "formula": "query4"
+                                        },
+                                        {
+                                            "alias": "3XX",
+                                            "formula": "query5"
+                                        },
+                                        {
+                                            "alias": "4XX",
+                                            "formula": "query6"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:aws.applicationelb.httpcode_elb_5xx{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "sum:aws.applicationelb.httpcode_target_5xx{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query3",
+                                            "query": "sum:aws.applicationelb.httpcode_target_2xx{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query4",
+                                            "query": "sum:aws.applicationelb.httpcode_elb_5_0_4{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query5",
+                                            "query": "sum:aws.applicationelb.httpcode_target_3xx{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query6",
+                                            "query": "sum:aws.applicationelb.httpcode_target_4xx{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "palette": "datadog16",
+                                        "order_by": "values",
+                                        "line_type": "solid",
+                                        "line_width": "normal"
+                                    },
+                                    "display_type": "line"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "id": 7077038874785904,
+                        "definition": {
+                            "title": "Total Requests Status Codes",
+                            "show_legend": true,
+                            "legend_layout": "horizontal",
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "type": "timeseries",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "alias": "5XX Requests",
+                                            "formula": "query1"
+                                        },
+                                        {
+                                            "alias": "4XX Requests",
+                                            "formula": "query4"
+                                        },
+                                        {
+                                            "alias": "3XX Requests",
+                                            "formula": "query5"
+                                        },
+                                        {
+                                            "alias": "2XX Requests",
+                                            "formula": "query3"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:aws.elasticbeanstalk.application_requests_5xx{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query4",
+                                            "query": "sum:aws.elasticbeanstalk.application_requests_4xx{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query5",
+                                            "query": "sum:aws.elasticbeanstalk.application_requests_3xx{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query3",
+                                            "query": "sum:aws.elasticbeanstalk.application_requests_2xx{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "palette": "datadog16",
+                                        "line_type": "solid",
+                                        "line_width": "normal"
+                                    },
+                                    "display_type": "line"
+                                }
+                            ],
+                            "yaxis": {
+                                "include_zero": false,
+                                "scale": "linear",
+                                "min": "auto",
+                                "max": "auto"
+                            }
+                        }
+                    },
+                    {
+                        "id": 4582346169552927,
+                        "definition": {
+                            "title": "Request Latency (p90, p95, p99)",
+                            "show_legend": true,
+                            "legend_layout": "horizontal",
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "type": "timeseries",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "alias": "p90",
+                                            "formula": "query1"
+                                        },
+                                        {
+                                            "alias": "p95",
+                                            "formula": "query2"
+                                        },
+                                        {
+                                            "alias": "p99",
+                                            "formula": "query3"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:aws.elasticbeanstalk.application_latency_p_9_0{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "avg:aws.elasticbeanstalk.application_latency_p_9_5{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query3",
+                                            "query": "avg:aws.elasticbeanstalk.application_latency_p_9_9_9{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "palette": "datadog16",
+                                        "line_type": "solid",
+                                        "line_width": "normal"
+                                    },
+                                    "display_type": "line"
+                                }
+                            ],
+                            "yaxis": {
+                                "include_zero": false,
+                                "scale": "linear"
+                            }
+                        }
+                    },
+                    {
+                        "id": 4638135228921656,
+                        "definition": {
+                            "title": "Total Requests Per Second",
+                            "show_legend": true,
+                            "legend_layout": "horizontal",
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "type": "timeseries",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "alias": "RPS",
+                                            "formula": "per_second(query2)"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "palette": "datadog16",
+                                        "line_type": "solid",
+                                        "line_width": "normal"
+                                    },
+                                    "display_type": "line"
+                                }
+                            ],
+                            "yaxis": {
+                                "include_zero": false,
+                                "scale": "linear",
+                                "min": "auto",
+                                "max": "auto"
+                            }
+                        }
+                    },
+                    {
+                        "id": 7580930198587572,
+                        "definition": {
+                            "title": "Per Route Requests Status Codes",
+                            "show_legend": true,
+                            "legend_layout": "horizontal",
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "type": "timeseries",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "alias": "5XX Requests",
+                                            "formula": "query1"
+                                        },
+                                        {
+                                            "alias": "4XX Requests",
+                                            "formula": "query4"
+                                        },
+                                        {
+                                            "alias": "3XX Requests",
+                                            "formula": "query5"
+                                        },
+                                        {
+                                            "alias": "2XX Requests",
+                                            "formula": "query3"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "sum:aws.elasticbeanstalk.application_requests_5xx{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query4",
+                                            "query": "sum:aws.elasticbeanstalk.application_requests_4xx{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query5",
+                                            "query": "sum:aws.elasticbeanstalk.application_requests_3xx{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query3",
+                                            "query": "sum:aws.elasticbeanstalk.application_requests_2xx{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "palette": "datadog16",
+                                        "line_type": "solid",
+                                        "line_width": "normal"
+                                    },
+                                    "display_type": "line"
+                                }
+                            ],
+                            "yaxis": {
+                                "include_zero": false,
+                                "scale": "linear",
+                                "min": "auto",
+                                "max": "auto"
+                            }
+                        }
+                    },
+                    {
+                        "id": 7182632273970622,
+                        "definition": {
+                            "title": "Per Route Request Latency (p90, p95, p99)",
+                            "show_legend": true,
+                            "legend_layout": "horizontal",
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "type": "timeseries",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "alias": "p90",
+                                            "formula": "query1"
+                                        },
+                                        {
+                                            "alias": "p95",
+                                            "formula": "query2"
+                                        },
+                                        {
+                                            "alias": "p99",
+                                            "formula": "query3"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query1",
+                                            "query": "avg:aws.elasticbeanstalk.application_latency_p_9_0{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "avg:aws.elasticbeanstalk.application_latency_p_9_5{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}"
+                                        },
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query3",
+                                            "query": "avg:aws.elasticbeanstalk.application_latency_p_9_9_9{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "palette": "datadog16",
+                                        "line_type": "solid",
+                                        "line_width": "normal"
+                                    },
+                                    "display_type": "line"
+                                }
+                            ],
+                            "yaxis": {
+                                "include_zero": false,
+                                "scale": "linear"
+                            }
+                        }
+                    },
+                    {
+                        "id": 5588913790776414,
+                        "definition": {
+                            "title": "Per Route Requests Per Second",
+                            "show_legend": true,
+                            "legend_layout": "auto",
+                            "legend_columns": [
+                                "avg",
+                                "min",
+                                "max",
+                                "value",
+                                "sum"
+                            ],
+                            "type": "timeseries",
+                            "requests": [
+                                {
+                                    "formulas": [
+                                        {
+                                            "alias": "RPS",
+                                            "formula": "per_second(query2)"
+                                        }
+                                    ],
+                                    "queries": [
+                                        {
+                                            "data_source": "metrics",
+                                            "name": "query2",
+                                            "query": "sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}"
+                                        }
+                                    ],
+                                    "response_format": "timeseries",
+                                    "style": {
+                                        "palette": "dog_classic",
+                                        "line_type": "solid",
+                                        "line_width": "normal"
+                                    },
+                                    "display_type": "line"
+                                }
+                            ],
+                            "yaxis": {
+                                "include_zero": false,
+                                "scale": "linear",
+                                "min": "auto",
+                                "max": "auto"
+                            }
+                        }
                     }
                 ]
             }
         },
         {
-            "id": 7077038874785904,
+            "id": 716972608499380,
             "definition": {
-                "title": "Request Status Codes",
-                "show_legend": true,
-                "legend_layout": "horizontal",
-                "legend_columns": [
-                    "avg",
-                    "min",
-                    "max",
-                    "value",
-                    "sum"
-                ],
-                "type": "timeseries",
-                "requests": [
-                    {
-                        "formulas": [
-                            {
-                                "alias": "5XX Requests",
-                                "formula": "query1"
-                            },
-                            {
-                                "alias": "4XX Requests",
-                                "formula": "query4"
-                            },
-                            {
-                                "alias": "3XX Requests",
-                                "formula": "query5"
-                            },
-                            {
-                                "alias": "2XX Requests",
-                                "formula": "query3"
-                            }
-                        ],
-                        "queries": [
-                            {
-                                "data_source": "metrics",
-                                "name": "query1",
-                                "query": "sum:aws.elasticbeanstalk.application_requests_5xx{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
-                            },
-                            {
-                                "data_source": "metrics",
-                                "name": "query4",
-                                "query": "sum:aws.elasticbeanstalk.application_requests_4xx{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
-                            },
-                            {
-                                "data_source": "metrics",
-                                "name": "query5",
-                                "query": "sum:aws.elasticbeanstalk.application_requests_3xx{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
-                            },
-                            {
-                                "data_source": "metrics",
-                                "name": "query3",
-                                "query": "sum:aws.elasticbeanstalk.application_requests_2xx{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
-                            }
-                        ],
-                        "response_format": "timeseries",
-                        "style": {
-                            "palette": "datadog16",
-                            "line_type": "solid",
-                            "line_width": "normal"
-                        },
-                        "display_type": "line"
-                    }
-                ],
-                "yaxis": {
-                    "include_zero": false,
-                    "scale": "linear",
-                    "min": "auto",
-                    "max": "auto"
-                }
-            }
-        },
-        {
-            "id": 250716378181250,
-            "definition": {
-                "title": "Total Requests",
-                "show_legend": true,
-                "legend_layout": "auto",
-                "legend_columns": [
-                    "avg",
-                    "min",
-                    "max",
-                    "value",
-                    "sum"
-                ],
-                "type": "timeseries",
-                "requests": [
-                    {
-                        "formulas": [
-                            {
-                                "alias": "Request Total",
-                                "formula": "query2"
-                            }
-                        ],
-                        "queries": [
-                            {
-                                "data_source": "metrics",
-                                "name": "query2",
-                                "query": "sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:eb-app}"
-                            }
-                        ],
-                        "response_format": "timeseries",
-                        "style": {
-                            "palette": "dog_classic",
-                            "line_type": "solid",
-                            "line_width": "normal"
-                        },
-                        "display_type": "line"
-                    }
-                ],
-                "yaxis": {
-                    "include_zero": false,
-                    "scale": "linear",
-                    "min": "auto",
-                    "max": "auto"
-                }
-            }
-        },
-        {
-            "id": 1370161804941527,
-            "definition": {
-                "title": "Error Rate vs Success Percentage",
-                "show_legend": true,
-                "legend_layout": "horizontal",
-                "legend_columns": [
-                    "avg",
-                    "min",
-                    "max",
-                    "value",
-                    "sum"
-                ],
-                "type": "timeseries",
-                "requests": [
-                    {
-                        "formulas": [
-                            {
-                                "alias": "Error Rate",
-                                "formula": "100 * (query1 + query4 + query5) / query2"
-                            },
-                            {
-                                "alias": "Success Rate",
-                                "formula": "100 * query3 / query2"
-                            }
-                        ],
-                        "queries": [
-                            {
-                                "data_source": "metrics",
-                                "name": "query1",
-                                "query": "sum:aws.elasticbeanstalk.application_requests_5xx{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
-                            },
-                            {
-                                "data_source": "metrics",
-                                "name": "query2",
-                                "query": "sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}"
-                            },
-                            {
-                                "data_source": "metrics",
-                                "name": "query3",
-                                "query": "sum:aws.elasticbeanstalk.application_requests_2xx{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
-                            },
-                            {
-                                "data_source": "metrics",
-                                "name": "query4",
-                                "query": "sum:aws.elasticbeanstalk.application_requests_4xx{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
-                            },
-                            {
-                                "data_source": "metrics",
-                                "name": "query5",
-                                "query": "sum:aws.elasticbeanstalk.application_requests_3xx{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}.as_count()"
-                            }
-                        ],
-                        "response_format": "timeseries",
-                        "style": {
-                            "palette": "datadog16",
-                            "line_type": "solid",
-                            "line_width": "normal"
-                        },
-                        "display_type": "line"
-                    }
-                ],
-                "yaxis": {
-                    "include_zero": true,
-                    "scale": "linear",
-                    "min": "0",
-                    "max": "100"
-                }
-            }
-        },
-        {
-            "id": 4638135228921656,
-            "definition": {
-                "title": "Total Requests Per Second",
-                "show_legend": true,
-                "legend_layout": "horizontal",
-                "legend_columns": [
-                    "avg",
-                    "min",
-                    "max",
-                    "value",
-                    "sum"
-                ],
-                "type": "timeseries",
-                "requests": [
-                    {
-                        "formulas": [
-                            {
-                                "alias": "RPS",
-                                "formula": "per_second(query2)"
-                            }
-                        ],
-                        "queries": [
-                            {
-                                "data_source": "metrics",
-                                "name": "query2",
-                                "query": "sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}"
-                            }
-                        ],
-                        "response_format": "timeseries",
-                        "style": {
-                            "palette": "datadog16",
-                            "line_type": "solid",
-                            "line_width": "normal"
-                        },
-                        "display_type": "line"
-                    }
-                ],
-                "yaxis": {
-                    "include_zero": false,
-                    "scale": "linear",
-                    "min": "auto",
-                    "max": "auto"
-                }
-            }
-        },
-        {
-            "id": 5588913790776414,
-            "definition": {
-                "title": "Requests Per Second (By Route)",
-                "show_legend": true,
-                "legend_layout": "auto",
-                "legend_columns": [
-                    "avg",
-                    "min",
-                    "max",
-                    "value",
-                    "sum"
-                ],
-                "type": "timeseries",
-                "requests": [
-                    {
-                        "formulas": [
-                            {
-                                "alias": "RPS",
-                                "formula": "per_second(query2)"
-                            }
-                        ],
-                        "queries": [
-                            {
-                                "data_source": "metrics",
-                                "name": "query2",
-                                "query": "sum:aws.elasticbeanstalk.application_requests_total{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}"
-                            }
-                        ],
-                        "response_format": "timeseries",
-                        "style": {
-                            "palette": "dog_classic",
-                            "line_type": "solid",
-                            "line_width": "normal"
-                        },
-                        "display_type": "line"
-                    }
-                ],
-                "yaxis": {
-                    "include_zero": false,
-                    "scale": "linear",
-                    "min": "auto",
-                    "max": "auto"
-                }
-            }
-        },
-        {
-            "id": 6062572114909556,
-            "definition": {
-                "title": "Application Health Over Time",
-                "title_size": "16",
-                "title_align": "left",
-                "show_legend": false,
-                "legend_layout": "auto",
-                "legend_columns": [
-                    "avg",
-                    "min",
-                    "max",
-                    "value",
-                    "sum"
-                ],
-                "type": "timeseries",
-                "requests": [
-                    {
-                        "formulas": [
-                            {
-                                "alias": "Health",
-                                "formula": "autosmooth(query1)"
-                            }
-                        ],
-                        "queries": [
-                            {
-                                "name": "query1",
-                                "data_source": "metrics",
-                                "query": "avg:aws.elasticbeanstalk.environment_health{environmentname:${elasticbeanstalk_env}}"
-                            }
-                        ],
-                        "response_format": "timeseries",
-                        "style": {
-                            "palette": "dog_classic",
-                            "order_by": "values",
-                            "line_type": "solid",
-                            "line_width": "normal"
-                        },
-                        "display_type": "line"
-                    }
-                ],
-                "yaxis": {
-                    "scale": "log"
-                },
-                "markers": [
-                    {
-                        "label": " Ok ",
-                        "value": "y = 0",
-                        "display_type": "ok solid"
-                    },
-                    {
-                        "label": " Info ",
-                        "value": "y = 5",
-                        "display_type": "info solid"
-                    },
-                    {
-                        "label": " Unknown ",
-                        "value": "y = 10",
-                        "display_type": "warning solid"
-                    },
-                    {
-                        "label": " Warning ",
-                        "value": "y = 15",
-                        "display_type": "warning solid"
-                    },
-                    {
-                        "label": " Degraded ",
-                        "value": "y = 20",
-                        "display_type": "error solid"
-                    },
-                    {
-                        "label": " Severe ",
-                        "value": "y = 25",
-                        "display_type": "error solid"
-                    }
-                ]
-            }
-        },
-        {
-            "id": 1869573086752437,
-            "definition": {
-                "title": "Memory Utilization",
-                "show_legend": true,
-                "legend_layout": "horizontal",
-                "legend_columns": [
-                    "avg",
-                    "min",
-                    "max",
-                    "value",
-                    "sum"
-                ],
-                "type": "timeseries",
-                "requests": [
-                    {
-                        "formulas": [
-                            {
-                                "alias": "Avg Memory",
-                                "formula": "(total_memory - usable_memory) / total_memory * 100"
-                            },
-                            {
-                                "alias": "Max Memory",
-                                "formula": "(total_memory - query2) / total_memory * 100"
-                            }
-                        ],
-                        "queries": [
-                            {
-                                "data_source": "metrics",
-                                "name": "total_memory",
-                                "query": "avg:system.mem.total{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}"
-                            },
-                            {
-                                "data_source": "metrics",
-                                "name": "usable_memory",
-                                "query": "avg:system.mem.usable{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}"
-                            },
-                            {
-                                "data_source": "metrics",
-                                "name": "query2",
-                                "query": "max:system.mem.usable{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}"
-                            }
-                        ],
-                        "response_format": "timeseries",
-                        "style": {
-                            "palette": "datadog16",
-                            "line_type": "solid",
-                            "line_width": "normal"
-                        },
-                        "display_type": "line"
-                    }
-                ],
-                "yaxis": {
-                    "include_zero": false,
-                    "scale": "linear",
-                    "max": "100"
-                }
-            }
-        },
-        {
-            "id": 1103778836723517,
-            "definition": {
-                "title": "CPU Utilization",
-                "show_legend": true,
-                "legend_layout": "horizontal",
-                "legend_columns": [
-                    "avg",
-                    "min",
-                    "max",
-                    "value",
-                    "sum"
-                ],
-                "type": "timeseries",
-                "requests": [
-                    {
-                        "formulas": [
-                            {
-                                "alias": "Avg CPU",
-                                "formula": "query1"
-                            },
-                            {
-                                "alias": "Max CPU",
-                                "formula": "query2"
-                            }
-                        ],
-                        "queries": [
-                            {
-                                "data_source": "metrics",
-                                "name": "query1",
-                                "query": "aws.ec2.cpuutilization{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}"
-                            },
-                            {
-                                "data_source": "metrics",
-                                "name": "query2",
-                                "query": "aws.ec2.cpuutilization.maximum{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}"
-                            }
-                        ],
-                        "response_format": "timeseries",
-                        "style": {
-                            "palette": "datadog16",
-                            "line_type": "solid",
-                            "line_width": "normal"
-                        },
-                        "display_type": "line"
-                    }
-                ],
-                "yaxis": {
-                    "include_zero": true,
-                    "scale": "linear",
-                    "min": "0",
-                    "max": "100"
-                }
-            }
-        },
-        {
-            "id": 8403087392374174,
-            "definition": {
-                "title": "Disk Space Utilization",
+                "title": "The Cat API Request Durations",
                 "title_size": "16",
                 "title_align": "left",
                 "show_legend": true,
@@ -754,151 +1042,24 @@
                     {
                         "formulas": [
                             {
-                                "alias": "Avg Disk",
+                                "alias": "Avg",
                                 "formula": "query1"
                             },
                             {
-                                "alias": "Max Disk",
+                                "alias": "Max",
                                 "formula": "query2"
-                            }
-                        ],
-                        "queries": [
-                            {
-                                "name": "query1",
-                                "data_source": "metrics",
-                                "query": "avg:system.disk.utilized{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}"
-                            },
-                            {
-                                "name": "query2",
-                                "data_source": "metrics",
-                                "query": "max:system.disk.utilized{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}"
-                            }
-                        ],
-                        "response_format": "timeseries",
-                        "style": {
-                            "palette": "dog_classic",
-                            "order_by": "values",
-                            "line_type": "solid",
-                            "line_width": "normal"
-                        },
-                        "display_type": "line"
-                    }
-                ],
-                "yaxis": {
-                    "include_zero": true,
-                    "max": "100"
-                }
-            }
-        },
-        {
-            "id": 4582346169552927,
-            "definition": {
-                "title": "Request Latency (p90, p95, p99)",
-                "show_legend": true,
-                "legend_layout": "horizontal",
-                "legend_columns": [
-                    "avg",
-                    "min",
-                    "max",
-                    "value",
-                    "sum"
-                ],
-                "type": "timeseries",
-                "requests": [
-                    {
-                        "formulas": [
-                            {
-                                "alias": "p90",
-                                "formula": "query1"
-                            },
-                            {
-                                "alias": "p95",
-                                "formula": "query2"
-                            },
-                            {
-                                "alias": "p99",
-                                "formula": "query3"
                             }
                         ],
                         "queries": [
                             {
                                 "data_source": "metrics",
                                 "name": "query1",
-                                "query": "avg:aws.elasticbeanstalk.application_latency_p_9_0{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}"
+                                "query": "avg:third_party_request_duration{third_party_service:thecatapi}"
                             },
                             {
                                 "data_source": "metrics",
                                 "name": "query2",
-                                "query": "avg:aws.elasticbeanstalk.application_latency_p_9_5{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}"
-                            },
-                            {
-                                "data_source": "metrics",
-                                "name": "query3",
-                                "query": "avg:aws.elasticbeanstalk.application_latency_p_9_9_9{elasticbeanstalk_environment-name:${elasticbeanstalk_env}}"
-                            }
-                        ],
-                        "response_format": "timeseries",
-                        "style": {
-                            "palette": "datadog16",
-                            "line_type": "solid",
-                            "line_width": "normal"
-                        },
-                        "display_type": "line"
-                    }
-                ],
-                "yaxis": {
-                    "include_zero": false,
-                    "scale": "linear"
-                }
-            }
-        },
-        {
-            "id": 2540539961976870,
-            "definition": {
-                "title": "APM Metrics",
-                "title_size": "16",
-                "title_align": "left",
-                "show_legend": true,
-                "legend_layout": "auto",
-                "legend_columns": [
-                    "avg",
-                    "min",
-                    "max",
-                    "value",
-                    "sum"
-                ],
-                "type": "timeseries",
-                "requests": [
-                    {
-                        "formulas": [
-                            {
-                                "formula": "query1"
-                            },
-                            {
-                                "formula": "query2"
-                            },
-                            {
-                                "formula": "query3"
-                            }
-                        ],
-                        "queries": [
-                            {
-                                "data_source": "apm_metrics",
-                                "name": "query1",
-                                "stat": "hits",
-                                "service": "aws.secretsmanager"
-                            },
-                            {
-                                "data_source": "apm_metrics",
-                                "name": "query2",
-                                "stat": "hits",
-                                "service": "flask"
-                            },
-                            {
-                                "data_source": "apm_metrics",
-                                "name": "query3",
-                                "stat": "hits",
-                                "service": "requests"
+                                "query": "max:third_party_request_duration{third_party_service:thecatapi}"
                             }
                         ],
                         "response_format": "timeseries",

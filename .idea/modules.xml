@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../Downloads/1699236213947-book-online-257/.idea/1699236213947-book-online-257.iml" filepath="$PROJECT_DIR$/../Downloads/1699236213947-book-online-257/.idea/1699236213947-book-online-257.iml" />
       <module fileurl="file://$PROJECT_DIR$/../Downloads/1732214097569-TicketsProject/.idea/1732214097569-TicketsProject.iml" filepath="$PROJECT_DIR$/../Downloads/1732214097569-TicketsProject/.idea/1732214097569-TicketsProject.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../Downloads/1733238481553-TicketsProject/.idea/1733238481553-TicketsProject.iml" filepath="$PROJECT_DIR$/../Downloads/1733238481553-TicketsProject/.idea/1733238481553-TicketsProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Downloads/aleidy-eb/.idea/1733238481553-TicketsProject.iml" filepath="$PROJECT_DIR$/../Downloads/aleidy-eb/.idea/1733238481553-TicketsProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Ticketsproject_backup/.idea/Ticketsproject_backup.iml" filepath="$PROJECT_DIR$/../Ticketsproject_backup/.idea/Ticketsproject_backup.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/datadog.iml" filepath="$PROJECT_DIR$/.idea/datadog.iml" />
       <module fileurl="file://$PROJECT_DIR$/../huma.ai/.idea/huma.ai.iml" filepath="$PROJECT_DIR$/../huma.ai/.idea/huma.ai.iml" />
       <module fileurl="file://$PROJECT_DIR$/../huma.ai/tf-aws-client-stack/.idea/tf-aws-client-stack.iml" filepath="$PROJECT_DIR$/../huma.ai/tf-aws-client-stack/.idea/tf-aws-client-stack.iml" />
