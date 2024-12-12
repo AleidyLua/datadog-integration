@@ -1,0 +1,1 @@
+organization = "repo:elgorithm/*" # all repos in organization

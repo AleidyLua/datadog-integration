@@ -88,25 +88,31 @@ def cat_route():
 
         # Send custom metric for API call duration
         datadog.api.Metric.send(
-            metric="third_party_request",
-            points=1,
-            tags=[f"parent_path:{request_path}","path:v1/images/search", "outcome:success", "method:GET", "host:https://api.thecatapi.com", f"duration:{duration}", f"status_code:{response.status_code}", "third_party_service:TheCatApi"]
+            metric="third_party_request_duration",
+            points=[(datetime.now(), duration)],
+            tags=[f"parent_endpoint:{request_path}","endpoint:GET v1/images", "outcome:success", "host:https://api.thecatapi.com", f"status_code:{response.status_code}", "third_party_service:TheCatApi"]
+        )
+        datadog.api.Metric.send(
+            metric="third_party_request_count",
+            points=[(datetime.now(), 1)],
+            tags=[f"parent_endpoint:{request_path}","endpoint:GET v1/images", "outcome:success", "host:https://api.thecatapi.com", f"status_code:{response.status_code}", "third_party_service:TheCatApi"]
         )
 
         print(f"Request Path: {request_path}")
-        print(response.json())
+
+        return json.dumps(response, indent=4, sort_keys=True, default=str)
+
     except Exception as e:
         # Send application error metric
-        request_path = request.path
-        datadog.api.Metric.send(
-            metric="third_party_request",
-            points=1,
-            tags=[f"parent_path:{request_path}", "path:v1/images/search", "outcome:failure", "method:GET", "host:https://api.thecatapi.com",
-                  f"duration:0", f"status_code:{response.status_code}", "third_party_service:TheCatApi"]
-        )
+        # request_path = request.path
+        # datadog.api.Metric.send(
+        #     metric="third_party_request_count",
+        #     points=[(time.time(), 1)],
+        #     tags=[f"parent_endpoint:{request_path}", "endpoint:GET v1/images", "outcome:success",
+        #           "host:https://api.thecatapi.com",
+        #           "third_party_service:TheCatApi"]
+        # )
         print(f"Error occurred: {e}")
-
-    return jsonify(response.json())
 
 
 if __name__ == "__main__":

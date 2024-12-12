@@ -1,21 +1,22 @@
-locals {
-  dashboard_metrics = {
-    for app_name in var.application_elasticbean : app_name => [
-      for metric in var.metrics_elasticbean : {
-        query = replace(metric.query, "your-environment-name", app_name)
-        title = metric.title
-      }
-    ]
+terraform {
+  required_providers {
+    datadog = {
+      source = "DataDog/datadog"
+    }
   }
+}
+resource "datadog_integration_aws" "datadog_aws_integration" {
+  account_id = var.aws_account_id
+  role_name  = "DatadogAWSIntegrationRole"
 }
 
 resource "aws_iam_policy" "datadog_aws_integration" {
-  name   = "DatadogAWSIntegrationPolicy-${terraform.workspace}"
+  name   = "DatadogAWSIntegrationPolicy"
   policy = data.aws_iam_policy_document.datadog_aws_integration.json
 }
 
 resource "aws_iam_role" "datadog_aws_integration" {
-  name               = "DatadogAWSIntegrationRole-${terraform.workspace}"
+  name               = "DatadogAWSIntegrationRole"
   description        = "Role for Datadog AWS Integration"
   assume_role_policy = data.aws_iam_policy_document.datadog_aws_integration_assume_role.json
 }
@@ -30,22 +31,20 @@ resource "aws_iam_role_policy_attachment" "datadog_aws_integration_security_audi
   policy_arn = "arn:aws:iam::aws:policy/SecurityAudit"
 }
 
-data "aws_caller_identity" "current" {}
-
 data "aws_iam_policy_document" "datadog_aws_integration_assume_role" {
   statement {
     actions = ["sts:AssumeRole"]
 
     principals {
       type        = "AWS"
-      identifiers = ["arn:aws:iam::464622532012:root"]
+      identifiers = ["arn:aws:iam::464622532012:root"] # DataDog's AWS Account number
     }
     condition {
       test     = "StringEquals"
       variable = "sts:ExternalId"
 
       values = [
-        datadog_integration_aws.datadog.external_id
+        datadog_integration_aws.datadog_aws_integration.external_id
       ]
     }
   }
@@ -160,9 +159,4 @@ data "aws_iam_policy_document" "datadog_aws_integration" {
     ]
     resources = ["*"]
   }
-}
-
-resource "datadog_integration_aws" "datadog" {
-  account_id = data.aws_caller_identity.current.account_id
-  role_name  = "DatadogAWSIntegrationRole-${terraform.workspace}"
 }

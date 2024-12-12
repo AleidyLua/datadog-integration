@@ -135,13 +135,13 @@ resource "datadog_dashboard" "app_dashboard" {
             data_source = "metrics"
 
             query = "avg:system.mem.total{elasticbeanstalk_environment-name:${var.elasticbean_env}}" # TODO
-            name = "total_memory"
+            name  = "total_memory"
           }
         }
         query {
           metric_query {
             query = "avg:system.mem.usable{elasticbeanstalk_environment-name:${var.elasticbean_env}}" # TODO
-            name = "usable_memory"
+            name  = "usable_memory"
           }
         }
       }
@@ -216,7 +216,7 @@ resource "datadog_dashboard" "app_dashboard" {
 
 
 resource "datadog_dashboard_json" "dashboard_json" {
-  dashboard = templatefile("${path.module}/dashboard.json.tmpl", {
+  dashboard = templatefile("beanstalk_dashboard.json.tmpl", {
     elasticbeanstalk_env = var.elasticbean_env
   })
 }
