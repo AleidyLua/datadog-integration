@@ -1,4 +1,3 @@
-
 resource "datadog_dashboard_json" "app-1" {
   dashboard = templatefile("${path.module}/dashboard.json.tmpl", {
     elasticbeanstalk_env = "eb-app"
@@ -10,7 +9,6 @@ resource "datadog_dashboard_json" "app-2" {
     elasticbeanstalk_env = "aleidy"
   })
 }
-
 
 
 //#RDS
