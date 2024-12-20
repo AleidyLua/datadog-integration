@@ -1,1 +1,1 @@
-beanstalk_environment_names = [""]
+beanstalk_environment_names = ["Ticketsonsale-staging-env"]
