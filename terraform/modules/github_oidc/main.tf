@@ -61,23 +61,28 @@ data "aws_iam_policy_document" "beanstalk_update_and_deploy" {
       "s3:PutObject",
     ]
     resources = [
-      "arn:aws:s3:::${var.beanstalk_artifact_bucket_name}",  # S3 bucket
+      "arn:aws:s3:::elasticbeanstalk*",                      # S3 bucket AWS creates for temporary files
+      "arn:aws:s3:::elasticbeanstalk*/*",                    # All objects within the bucket
+      "arn:aws:s3:::${var.beanstalk_artifact_bucket_name}",  # S3 bucket to hold zipped application files
       "arn:aws:s3:::${var.beanstalk_artifact_bucket_name}/*" # All objects within the bucket
     ]
   }
   statement {
     effect = "Allow"
     actions = [
-      "elasticbeanstalk:CreateApplicationVersion",
-      "elasticbeanstalk:DescribeApplicationVersions",
-      "elasticbeanstalk:UpdateEnvironment",
-      "elasticbeanstalk:DescribeEnvironments",
-      "elasticbeanstalk:DescribeEnvironmentResources"
+      "s3:CreateBucket",
+      "s3:PutBucketOwnershipControls"
     ]
     resources = [
-      "*"
+      "arn:aws:s3:::elasticbeanstalk*", # S3 bucket
     ]
   }
+}
+
+# Attach the AWS managed policy to the role
+resource "aws_iam_role_policy_attachment" "elasticbeanstalk_admin" {
+  role       = aws_iam_role.this.name
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess-AWSElasticBeanstalk"
 }
 
 resource "aws_iam_policy" "beanstalk_upload_and_deploy" {

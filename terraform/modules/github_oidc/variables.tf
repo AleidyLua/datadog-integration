@@ -4,6 +4,6 @@ variable "organization" {
 }
 
 variable "beanstalk_artifact_bucket_name" {
-  type = string
+  type        = string
   description = "The S3 bucket where beanstalk artifacts are being uploaded"
 }

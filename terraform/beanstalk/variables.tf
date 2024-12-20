@@ -1,4 +1,4 @@
 variable "beanstalk_environment_names" {
-  type = list(string)
+  type    = list(string)
   default = []
 }
